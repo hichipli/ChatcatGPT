@@ -14,4 +14,8 @@ To get started with ChatcatGPT, follow these simple steps:
 4. Start customizing your AI assistant's role as per your preference.
 5. Enjoy interacting with your personalized AI assistant!
 
+## Update Log
+
+October 8, 2023: Initial development completed at 5:00 AM. Some bugs related to JavaScript invocation are still being ironed out.
+
 Unleash the power of AI with ChatcatGPT today!
