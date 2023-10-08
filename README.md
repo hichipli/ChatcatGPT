@@ -1,4 +1,4 @@
-# [ChatcatGPT Project](https://sites.google.com/view/chatcatgpt)
+# [ChatcatGPT Project](https://sites.google.com/view/chatcatgpt) 拆开GPT
 
 Welcome to the ChatcatGPT Project! This is a streamlined version of a personally customizable Artificial Intelligence (AI) assistant. The project utilizes the power of the OpenAI API key to unlock a full range of features and functionalities.
 
