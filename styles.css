@@ -100,3 +100,48 @@
     vertical-align: middle;
 }
 
+
+.loader {
+    border: 4px solid #f3f3f3; /* Light grey */
+    border-top: 4px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+    margin-left: 5px;
+    vertical-align: middle;
+    display: none; /* 默认隐藏 */
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.btn-disabled {
+    background-color: #ccc !important; 
+    cursor: not-allowed !important;
+}
+
+#custom-identity-form {
+    margin-top: 10px;
+}
+
+#custom-identity-form input,
+#custom-identity-form textarea {
+    margin-bottom: 10px;
+    display: block; /* makes the elements take the full width */
+    width: 100%;
+}
+
+#delete-identity-btn {
+    margin-left: 10px;
+}
+
+#save-custom-identity-btn,
+#delete-identity-btn,
+#save-settings-btn,
+#save-api-key-btn,
+#delete-api-key-btn {
+    margin-top: 10px;
+}
