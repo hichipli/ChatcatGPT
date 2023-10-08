@@ -19,6 +19,6 @@ To get started with ChatcatGPT, follow these simple steps:
 October 8, 2023: Initial development is completed at 5:00 AM. Some bugs related to JavaScript invocation are still being ironed out.
 October 8, 2023: Basic bug fixes are completed at 6:00 AM. All fundamental features have been implemented. However, more effort is needed to improve the user experience and add richer functionalities.
 
-We look forward to community contributions.
+We warmly invite the community to join us in this endeavor.
 
 Experience the power of AI with ChatcatGPT today!
