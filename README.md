@@ -23,3 +23,6 @@ October 8, 2023: Basic bug fixes are completed at 6:00 AM. All fundamental featu
 We warmly invite the community to join us in this endeavor.
 
 Experience the power of AI with ChatcatGPT today!
+
+## License
+[MIT License](https://github.com/hichipli/ChatcatGPT/blob/main/LICENSE)
