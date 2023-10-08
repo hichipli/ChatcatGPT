@@ -30,18 +30,14 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         toggleSendingState(true);  // Change the state of the send button
-
         appendMessage('User', userInput);
         await fetchGPTResponse(userInput, currentModel);
-        
         toggleSendingState(false);  // Restore the send button state
-
         document.getElementById('user-input').value = '';
     });
 
     async function fetchGPTResponse(message, model) {
         const endpoint = 'https://api.openai.com/v1/chat/completions';
-
         const response = await fetch(endpoint, {
             method: 'POST',
             headers: {
@@ -56,11 +52,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 ]
             })
         });
-
         const data = await response.json();
         const gptResponse = data.choices[0].message.content.trim();
-
-        appendMessage('GPT', gptResponse);
+        typeWriterEffect('GPT', gptResponse);
     }
 
     function appendMessage(sender, message) {
@@ -71,17 +65,29 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function toggleSendingState(isSending) {
         const sendBtn = document.getElementById('send-btn');
-        const btnText = sendBtn.querySelector('.btn-text');
-        const loader = sendBtn.querySelector('.loader');
-
         if (isSending) {
-            sendBtn.classList.add('btn-disabled');
-            btnText.textContent = 'Loading...';
-            loader.style.display = 'inline-block';
+            sendBtn.setAttribute("disabled", "disabled");
+            sendBtn.querySelector('.btn-text').textContent = 'Loading...';
+            sendBtn.querySelector('.loader').style.display = 'inline-block';
         } else {
-            sendBtn.classList.remove('btn-disabled');
-            btnText.textContent = 'Send';
-            loader.style.display = 'none';
+            sendBtn.removeAttribute("disabled");
+            sendBtn.querySelector('.btn-text').textContent = 'Send';
+            sendBtn.querySelector('.loader').style.display = 'none';
+        }
+    }
+
+    function typeWriterEffect(sender, message, index = 0) {
+        const chatBox = document.getElementById('chat-box');
+        if (index === 0) {
+            chatBox.innerHTML += `<strong>${sender}:</strong> `;
+        }
+        if (index < message.length) {
+            chatBox.innerHTML += message.charAt(index);
+            index++;
+            setTimeout(() => typeWriterEffect(sender, message, index), 5);
+        } else {
+            chatBox.innerHTML += `<br><br>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
         }
     }
 
@@ -93,9 +99,7 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById('save-settings-btn').addEventListener('click', () => {
         currentModel = document.getElementById('model-selection').value;
         currentPrompt = document.getElementById('identity-selection').value;
-        
         updateDisplayedIdentity();
-        
         document.getElementById('settings-panel').style.display = 'none';
     });
 
@@ -118,20 +122,20 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById('save-custom-identity-btn').addEventListener('click', () => {
         const customName = document.getElementById('custom-identity-name').value;
         const customPrompt = document.getElementById('custom-identity-prompt').value;
-        
         if (!customName || !customPrompt) {
             alert('Please provide both a name and a prompt for the custom identity.');
             return;
         }
-
-        // Add to selection list
         const option = document.createElement('option');
         option.value = customPrompt;
         option.textContent = customName;
         document.getElementById('identity-selection').appendChild(option);
-
-        // Reset input fields
         document.getElementById('custom-identity-name').value = '';
         document.getElementById('custom-identity-prompt').value = '';
+    });
+
+    document.getElementById('delete-identity-btn').addEventListener('click', () => {
+        const selectedIdentity = document.getElementById('identity-selection');
+        selectedIdentity.remove(selectedIdentity.selectedIndex);
     });
 });
