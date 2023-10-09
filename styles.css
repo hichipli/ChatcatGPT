@@ -81,8 +81,6 @@
     margin-top: 0;
 }
 
-/* ... existing styles ... */
-
 .btn-disabled {
     background-color: #ccc;
     cursor: not-allowed;
@@ -99,7 +97,6 @@
     display: inline-block;
     vertical-align: middle;
 }
-
 
 .loader {
     border: 4px solid #f3f3f3; /* Light grey */
