@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function() {
         let dataUri = 'data:text/plain;charset=utf-8,' + encodeURIComponent(chatLog);
         let link = document.createElement('a');
         link.href = dataUri;
-        link.download = 'chat_log.txt';
+        link.download = 'ChatcatGPT_log.md';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
