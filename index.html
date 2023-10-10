@@ -10,26 +10,29 @@
 
 <body>
     <div class="chat-container">
-        <!-- Displaying current identity and prompt -->
-        <div id="current-model-display">
-            <strong>Current Model:</strong> <span id="current-model-name">GPT-4</span><br>
+        <!-- Displaying current model -->
+        <div id="current-model-display" class="model-identity-info">
+            <strong>Current Model:</strong> <span id="current-model-name">GPT-4</span>
         </div>
-        <div id="current-identity-display">
+
+        <!-- Displaying current identity and prompt -->
+        <div id="current-identity-display" class="model-identity-info">
             <strong>Current Identity:</strong> <span id="current-identity-name">Daily Assistant</span><br>
             <strong>Prompt:</strong> <span id="current-identity-prompt">You are a helpful assistant. You can help me by answering my questions. You can also ask me questions.</span>
         </div>
 
-        <!-- Settings button -->
-        <button id="settings-btn" class="large-btn">&#9881; Settings</button>
-
-        <!-- Download Chat Log Button -->
-        <button id="download-btn" class="large-btn">&#x2B07; Download</button>
+        <!-- Action buttons -->
+        <div class="action-buttons">
+            <button id="settings-btn" class="action-btn">&#9881; Settings</button>
+            <button id="download-btn" class="action-btn">&#x2B07; Download</button>
+        </div>
 
         <!-- Chatbox -->
         <div id="chat-box"></div>
 
+        <!-- User input -->
         <textarea id="user-input" placeholder="Type your message..."></textarea>
-        <button id="send-btn">
+        <button id="send-btn" class="action-btn">
             <span class="btn-text">Send</span>
             <span class="loader" style="display:none;"></span>
         </button>
