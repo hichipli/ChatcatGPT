@@ -14,7 +14,18 @@ document.addEventListener("DOMContentLoaded", function() {
     if (localStorage.getItem('apiKey')) {
         document.getElementById('api-key-input').value = localStorage.getItem('apiKey');
     }
-
+    
+    document.getElementById('download-btn').addEventListener('click', function() {
+        let chatLog = document.getElementById('chat-box').innerHTML;
+        let blob = new Blob([chatLog], { type: 'text/html' });
+        let link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'chat_log.html';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    });
+    
     document.getElementById('send-btn').addEventListener('click', async () => {
         const userInput = document.getElementById('user-input').value;
 
