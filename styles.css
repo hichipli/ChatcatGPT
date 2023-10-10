@@ -161,8 +161,17 @@ body, button, textarea, select {
     color: #007BFF;
 }
 
+#current-model-display {
+    margin-top: 35px;  /* provide some margin to ensure no overlap with product name */
+}
+
 @media screen and (max-width: 768px) {
     #product-name {
-        font-size: 18px;
+        font-size: 16px;
+        top: 5px;  /* adjust the top positioning */
+    }
+    #current-model-display {
+        font-size: 14px;
+        margin-top: 25px;  /* adjust the margin */
     }
 }
