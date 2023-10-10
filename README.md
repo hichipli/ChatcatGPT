@@ -31,22 +31,22 @@ Choose the method that best suits your preferences and enjoy your ChatcatGPT exp
 
 ### October 6, 2023
 
-Initial development completed at 5:00 AM.
-Addressed bugs related to JavaScript invocation.
+1. Initial development completed at 5:00 AM.
+2. Addressed bugs related to JavaScript invocation.
 
 ### October 8, 2023
 
-Basic bug fixes finished at 6:00 AM.
-Implemented all core features.
-Ongoing efforts to enrich user experience and add more functionalities.
+1. Basic bug fixes finished at 6:00 AM.
+2. Implemented all core features.
+3. Ongoing efforts to enrich user experience and add more functionalities.
 
 ### October 10, 2023:
 
-Launched website hosting for direct web-based access.
-Introduced the feature to download and save chat logs.
-The main interface now displays the current model being used.
-Revamped the settings window presentation.
-Addressed and resolved various minor issues.
+1. Launched website hosting for direct web-based access.
+2. Introduced the feature to download and save chat logs.
+3. The main interface now displays the current model being used.
+4. Revamped the settings window presentation.
+4. Addressed and resolved various minor issues.
 
 We warmly invite the community to join us in this endeavor.
 
