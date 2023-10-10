@@ -20,40 +20,34 @@
         <!-- Download Chat Log Button -->
         <button id="download-btn" class="large-btn">&#x2B07; Download</button>
 
-        <!-- Settings Panel -->
-        <div id="settings-panel">
-            <h2>Settings</h2>
-            
-            <p>Enter your API Key:</p>
-            <input type="text" id="api-key-input" placeholder="Enter your API Key here">
-            <button id="save-api-key-btn">Save API Key</button>
-            <button id="delete-api-key-btn">Delete API Key</button>
-        
-            <p>If you need an API key, you can get one from <a href="https://openai.com/blog/openai-api" target="_blank" style="color: blue;">OpenAI website</a>.</p>
-        
-            
-            <p>Select model:</p>
-            <select id="model-selection">
-                <option value="gpt-4">GPT-4</option>
-                <option value="gpt-3.5-turbo">GPT-3.5-Turbo</option>
-            </select>
-
-            <p>Select or customize identity:</p>
-            <select id="identity-selection">
-                <option value="You are a helpful assistant. You can help me by answering my questions. You can also ask me questions.">Daily Assistant</option>
-                <option value="I know you are a large language model. I would like you to play the role of a happy-to-help professor at one of the top research universities in the U.S. You are very good at conducting academic research, and your task is to help in authentic American English. Please use APA format to ensure that your responses are sufficiently scholarly, professional, and accurate.">University Professor</option>
-            </select>
-            <button id="delete-identity-btn">Delete</button>
-
-            <div id="custom-identity-form">
-                <input type="text" id="custom-identity-name" placeholder="Custom Identity Name">
-                <textarea id="custom-identity-prompt" placeholder="Custom Identity Prompt"></textarea>
-                <button id="save-custom-identity-btn">Save Custom Identity</button>
+        <!-- Settings Modal -->
+        <div id="settings-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn">&times;</span>
+                <h2>Settings</h2>
+                <p>Enter your API Key:</p>
+                <input type="text" id="api-key-input" placeholder="Enter your API Key here">
+                <button id="save-api-key-btn">Save API Key</button>
+                <button id="delete-api-key-btn">Delete API Key</button>
+                <p>If you need an API key, you can get one from <a href="https://openai.com/blog/openai-api" target="_blank" style="color: blue;">OpenAI website</a>.</p>
+                <p>Select model:</p>
+                <select id="model-selection">
+                    <option value="gpt-4">GPT-4</option>
+                    <option value="gpt-3.5-turbo">GPT-3.5-Turbo</option>
+                </select>
+                <p>Select or customize identity:</p>
+                <select id="identity-selection">
+                    <option value="You are a helpful assistant. You can help me by answering my questions. You can also ask me questions.">Daily Assistant</option>
+                    <option value="I know you are a large language model. I would like you to play the role of a happy-to-help professor at one of the top research universities in the U.S. You are very good at conducting academic research, and your task is to help in authentic American English. Please use APA format to ensure that your responses are sufficiently scholarly, professional, and accurate.">University Professor</option>
+                </select>
+                <button id="delete-identity-btn">Delete</button>
+                <div id="custom-identity-form">
+                    <input type="text" id="custom-identity-name" placeholder="Custom Identity Name">
+                    <textarea id="custom-identity-prompt" placeholder="Custom Identity Prompt"></textarea>
+                    <button id="save-custom-identity-btn">Save Custom Identity</button>
+                </div>
+                <button id="save-settings-btn">Save Settings</button>
             </div>
-
-            <button id="save-settings-btn">Save Settings</button>
-        </div>
-
         <div id="chat-box"></div>
         
         <textarea id="user-input" placeholder="Type your message..."></textarea>
