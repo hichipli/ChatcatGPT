@@ -1,4 +1,11 @@
 document.addEventListener("DOMContentLoaded", function() {
+    let customIdentities = JSON.parse(localStorage.getItem('customIdentities') || '[]');
+    customIdentities.forEach(identity => {
+        const option = document.createElement('option');
+        option.value = identity.prompt;
+        option.textContent = identity.name;
+        document.getElementById('identity-selection').appendChild(option);
+    });
     
     let currentModel = 'gpt-4';  // Default model
     let currentPrompt = 'You are a helpful assistant. You can help me by answering my questions. You can also ask me questions.'; // Default prompt
@@ -155,6 +162,13 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('identity-selection').appendChild(option);
         document.getElementById('custom-identity-name').value = '';
         document.getElementById('custom-identity-prompt').value = '';
+
+        let customIdentities = JSON.parse(localStorage.getItem('customIdentities') || '[]');
+        customIdentities.push({
+            name: customName,
+            prompt: customPrompt
+        });
+        localStorage.setItem('customIdentities', JSON.stringify(customIdentities));
     });
 
     document.getElementById('delete-identity-btn').addEventListener('click', () => {
