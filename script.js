@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         if(!localStorage.getItem('apiKey') || !document.getElementById('api-key-input').value){
             alert('Please provide your API key in settings.');
-            document.getElementById('settings-panel').style.display = 'block'; // Open settings if API key is missing
+            document.getElementById('settings-modal').style.display = 'block'; // Open settings if API key is missing
             return;
         }
 
@@ -129,9 +129,10 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById('save-settings-btn').addEventListener('click', () => {
         currentModel = document.getElementById('model-selection').value;
         currentPrompt = document.getElementById('identity-selection').value;
+        document.getElementById('current-model-name').textContent = currentModel;
         updateDisplayedIdentity();
-        document.getElementById('settings-panel').style.display = 'none';
-    });
+        document.getElementById('settings-modal').style.display = 'none';
+    });    
 
     document.getElementById('save-api-key-btn').addEventListener('click', () => {
         const apiKey = document.getElementById('api-key-input').value;
