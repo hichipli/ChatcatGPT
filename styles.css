@@ -1,13 +1,18 @@
+body, button, textarea, select {
+    font-family: 'Roboto', sans-serif;  /* Using Roboto fonts */
+}
+
 .chat-container {
     width: 400px;
     max-width: 100%;
     margin: 100px auto;
     padding: 10px;
-    font-family: 'Arial', sans-serif;
     background-color: #f5f5f5;
     border-radius: 15px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     box-sizing: border-box;
+    padding-top: 50px; 
+    position: relative;
 }
 
 #chat-box {
@@ -35,7 +40,7 @@
     transition: background-color 0.3s; 
 }
 
-.action-btn:hover {
+.action-btn:hover, #send-btn:hover {
     background-color: #ddd;
 }
 
@@ -47,7 +52,6 @@
     margin: 10px 10px 10px 0;
 }
 
-#settings-modal .modal-content,
 .modal-content {
     background-color: #f4f4f4;
     margin: 10% auto;
@@ -145,5 +149,20 @@
     .action-btn {
         font-size: 18px;
         padding: 12px 20px;
+    }
+}
+
+#product-name {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 24px; 
+    font-weight: bold;
+    color: #007BFF;
+}
+
+@media screen and (max-width: 768px) {
+    #product-name {
+        font-size: 18px;
     }
 }
