@@ -103,9 +103,21 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     document.getElementById('settings-btn').addEventListener('click', () => {
-        const settingsPanel = document.getElementById('settings-panel');
-        settingsPanel.style.display = settingsPanel.style.display === "none" ? "block" : "none";
+        const settingsModal = document.getElementById('settings-modal');
+        settingsModal.style.display = "block";
     });
+    
+    document.getElementsByClassName('close-btn')[0].addEventListener('click', () => {
+        const settingsModal = document.getElementById('settings-modal');
+        settingsModal.style.display = "none";
+    });
+    
+    window.onclick = function(event) {
+        const settingsModal = document.getElementById('settings-modal');
+        if (event.target === settingsModal) {
+            settingsModal.style.display = "none";
+        }
+    }
 
     document.getElementById('save-settings-btn').addEventListener('click', () => {
         currentModel = document.getElementById('model-selection').value;
