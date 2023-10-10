@@ -10,7 +10,7 @@ ChatcatGPT offers two convenient methods for users:
 ### Method 1: Web Access
 Easily access ChatcatGPT directly via our hosted website:
 
-1. Navigate to ChatcatGPT.org.
+1. Navigate to [ChatcatGPT.org]((https://sites.google.com/view/chatcatgpt)).
 2. Click on the "Try it NOW" button.
 3. Input your API key in the settings section.
 4. Customize your AI assistant's role according to your needs.
