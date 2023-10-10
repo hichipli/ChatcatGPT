@@ -16,11 +16,11 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     
     document.getElementById('download-btn').addEventListener('click', function() {
-        let chatLog = document.getElementById('chat-box').innerHTML;
-        let blob = new Blob([chatLog], { type: 'text/html' });
+        let chatLog = document.getElementById('chat-box').innerText;
+        let dataUri = 'data:text/plain;charset=utf-8,' + encodeURIComponent(chatLog);
         let link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'chat_log.html';
+        link.href = dataUri;
+        link.download = 'chat_log.txt';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
