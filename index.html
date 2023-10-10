@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChatcatGPT</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <div class="chat-container">
         <!-- Displaying current identity and prompt -->
@@ -19,6 +21,15 @@
 
         <!-- Download Chat Log Button -->
         <button id="download-btn" class="large-btn">&#x2B07; Download</button>
+
+        <!-- Chatbox -->
+        <div id="chat-box"></div>
+
+        <textarea id="user-input" placeholder="Type your message..."></textarea>
+        <button id="send-btn">
+            <span class="btn-text">Send</span>
+            <span class="loader" style="display:none;"></span>
+        </button>
 
         <!-- Settings Modal -->
         <div id="settings-modal" class="modal">
@@ -48,15 +59,8 @@
                 </div>
                 <button id="save-settings-btn">Save Settings</button>
             </div>
-        <div id="chat-box"></div>
-        
-        <textarea id="user-input" placeholder="Type your message..."></textarea>
-        <button id="send-btn">
-            <span class="btn-text">Send</span>
-            <span class="loader" style="display:none;"></span>
-        </button>
+        </div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
