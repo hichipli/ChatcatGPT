@@ -4,21 +4,49 @@ Welcome to the ChatcatGPT Project! This is a streamlined version of a personally
 
 ChatcatGPT is a lightweight web page, designed for quick and easy use across a variety of environments. It provides the opportunity to customize the identity of your own AI assistant, tailoring its features and capabilities to your specific needs.
 
-## How to Use
+## How to Use ChatcatGPT
+ChatcatGPT offers two convenient methods for users:
 
-To get started with ChatcatGPT, follow these simple steps:
+### Method 1: Web Access
+Easily access ChatcatGPT directly via our hosted website:
 
-1. Download and extract all files into a single directory.
-2. Open the index.html file in your browser.
+1. Navigate to ChatcatGPT.org.
+2. Click on the "Try it NOW" button.
 3. Input your API key in the settings section.
-4. Start customizing your AI assistant's role as per your preference.
-5. Enjoy interacting with your personalized AI assistant!
+4. Customize your AI assistant's role according to your needs.
+5. Enjoy using the web-based version of ChatcatGPT without any downloads!
+
+### Method 2: Local Browser Usage
+For those who prefer to run ChatcatGPT offline:
+
+1. Download and extract all files into a designated directory.
+2. Open the index.html file in your preferred browser.
+3. Input your API key in the settings section.
+4. Customize your AI assistant's role according to your needs.
+5. Engage and interact with your tailored AI assistant right from your browser!
+
+Choose the method that best suits your preferences and enjoy your ChatcatGPT experience!
 
 ## Update Log
 
-October 6, 2023: Initial development is completed at 5:00 AM. Some bugs related to JavaScript invocation are still being ironed out.
+### October 6, 2023
 
-October 8, 2023: Basic bug fixes are completed at 6:00 AM. All fundamental features have been implemented. However, more effort is needed to improve the user experience and add richer functionalities.
+Initial development completed at 5:00 AM.
+Addressed bugs related to JavaScript invocation.
+
+### October 8, 2023
+
+Basic bug fixes finished at 6:00 AM.
+Implemented all core features.
+Ongoing efforts to enrich user experience and add more functionalities.
+
+### October 10, 2023:
+
+Launched website hosting for direct web-based access.
+Introduced the feature to download and save chat logs.
+The main interface now displays the current model being used.
+Revamped the settings window presentation.
+Addressed and resolved various minor issues.
 
 We warmly invite the community to join us in this endeavor.
 
