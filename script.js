@@ -262,4 +262,57 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+    // Display privacy modal if the user hasn't made a choice before
+    if (!localStorage.getItem('dataSharingPreference')) {
+        document.getElementById('privacy-modal').style.display = 'block';
+    }
+
+    document.getElementById('agree-btn').addEventListener('click', function() {
+        // User agrees to share data
+        localStorage.setItem('dataSharingPreference', 'agree');
+        document.getElementById('privacy-modal').style.display = 'none';
+    });
+
+    document.getElementById('disagree-btn').addEventListener('click', function() {
+        // User disagrees to share data
+        localStorage.setItem('dataSharingPreference', 'disagree');
+        alert('We respect your choice. You can use this tool without sharing any data.');
+        document.getElementById('privacy-modal').style.display = 'none';
+    });
+
+    // Send data based on user's choice
+    function sendInteractionToServer(userMessage, aiResponse) {
+        if (localStorage.getItem('dataSharingPreference') !== 'agree') {
+            // Return directly if the user chose not to share
+            return;
+        }
+
+        fetch('YOUR_BACKEND_ENDPOINT', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                user: userMessage,
+                ai: aiResponse,
+                timestamp: new Date().toISOString()
+            })
+        });
+    }
+
+    document.getElementById('data-sharing-checkbox').addEventListener('change', function(event) {
+        if (event.target.checked) {
+            // If checked, set to 'agree'
+            localStorage.setItem('dataSharingPreference', 'agree');
+        } else {
+            // If unchecked, set to 'disagree'
+            localStorage.setItem('dataSharingPreference', 'disagree');
+        }
+    });
+    
+    if (localStorage.getItem('dataSharingPreference') === 'agree') {
+        document.getElementById('data-sharing-checkbox').checked = true;
+    } else {
+        document.getElementById('data-sharing-checkbox').checked = false;
+    }
 });
