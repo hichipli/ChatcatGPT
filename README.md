@@ -4,6 +4,8 @@ Welcome to the ChatcatGPT Project! This is a streamlined version of a personally
 
 ChatcatGPT is a lightweight web page, designed for quick and easy use across a variety of environments. It provides the opportunity to customize the identity of your own AI assistant, tailoring its features and capabilities to your specific needs.
 
+![Demo Image](./Media/ChatcatGPT-image.png) 
+
 ## How to Use ChatcatGPT
 ChatcatGPT offers two convenient methods for users:
 
