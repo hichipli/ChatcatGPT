@@ -22,13 +22,28 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('api-key-input').value = localStorage.getItem('apiKey');
     }
     
+    function getFormattedDate() {
+        const date = new Date();
+        const monthName = getMonthName(date.getMonth() + 1); 
+        const day = String(date.getDate()).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${monthName}-${day}-${year}`;
+    }
+    
+    function getMonthName(monthNumber) {
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        return months[monthNumber - 1];
+    }
+    
     document.getElementById('download-btn').addEventListener('click', function() {
         const downloadModal = document.getElementById('download-modal');
-        if (!downloadModal) {
+        if (downloadModal) {
+            downloadModal.style.display = "block";
+        } else {
             let chatLog = document.getElementById('chat-box').innerText;
+            const formattedDate = getFormattedDate();
             const date = new Date();
-            const formattedDate = date.toISOString().slice(0, 10);
-            const time = date.getHours() + "-" + date.getMinutes() + "-" + date.getSeconds();
+            const time = `${date.getHours()}-${date.getMinutes()}-${date.getSeconds()}`;
             let dataUri = 'data:text/plain;charset=utf-8,' + encodeURIComponent(chatLog);
             let link = document.createElement('a');
             link.href = dataUri;
@@ -36,10 +51,8 @@ document.addEventListener("DOMContentLoaded", function() {
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-        } else {
-            downloadModal.style.display = "block";
         }
-    });
+    });    
     
     document.getElementById('send-btn').addEventListener('click', async () => {
         const userInput = document.getElementById('user-input').value;
@@ -129,10 +142,14 @@ document.addEventListener("DOMContentLoaded", function() {
     
     window.onclick = function(event) {
         const settingsModal = document.getElementById('settings-modal');
+        const downloadModal = document.getElementById('download-modal');
         if (event.target === settingsModal) {
             settingsModal.style.display = "none";
         }
-    }
+        if (event.target === downloadModal) {
+            downloadModal.style.display = "none";
+        }
+    }    
 
     document.getElementById('save-settings-btn').addEventListener('click', () => {
         currentModel = document.getElementById('model-selection').value;
@@ -203,9 +220,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function downloadChatLog(fileType) {
         let chatLog = document.getElementById('chat-box').innerText;
+        const formattedDate = getFormattedDate(); 
         const date = new Date();
-        const formattedDate = date.toISOString().slice(0, 10);
-        const time = date.getHours() + "-" + date.getMinutes() + "-" + date.getSeconds();
+        const time = `${date.getHours()}-${date.getMinutes()}-${date.getSeconds()}`;
         const filename = `ChatcatGPT-${formattedDate}-${time}`;
 
         switch (fileType) {
@@ -225,4 +242,24 @@ document.addEventListener("DOMContentLoaded", function() {
             downloadModal.style.display = "none";
         }
     }
+
+    function saveAsTextFile(content, filename) {
+        const blob = new Blob([content], { type: 'text/plain' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = filename;
+        link.click();
+        URL.revokeObjectURL(link.href);
+    }
+    
+    const closeButtons = document.getElementsByClassName('close-btn');
+    for (let btn of closeButtons) {
+        btn.addEventListener('click', function() {
+            const modal = btn.closest('.modal'); 
+            if (modal) {
+                modal.style.display = "none";
+            }
+        });
+    }
+
 });
