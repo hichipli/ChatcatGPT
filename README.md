@@ -1,4 +1,4 @@
-# [ChatcatGPT](https://sites.google.com/view/chatcatgpt) 拆开GPT
+# [ChatcatGPT](https://www.chatcatgpt.org) 拆开GPT
 
 Welcome to the ChatcatGPT Project! This is a streamlined version of a personally customizable Artificial Intelligence (AI) assistant. The project utilizes the power of the OpenAI API key to unlock a full range of features and functionalities.
 
@@ -10,7 +10,7 @@ ChatcatGPT offers two convenient methods for users:
 ### Method 1: Web Access
 Easily access ChatcatGPT directly via our hosted website:
 
-1. Navigate to [ChatcatGPT.org](https://sites.google.com/view/chatcatgpt).
+1. Navigate to [ChatcatGPT.org](https://www.chatcatgpt.org).
 2. Click on the "Try it NOW" button.
 3. Input your API key in the settings section.
 4. Customize your AI assistant's role according to your needs.
