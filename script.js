@@ -23,14 +23,22 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     
     document.getElementById('download-btn').addEventListener('click', function() {
-        let chatLog = document.getElementById('chat-box').innerText;
-        let dataUri = 'data:text/plain;charset=utf-8,' + encodeURIComponent(chatLog);
-        let link = document.createElement('a');
-        link.href = dataUri;
-        link.download = 'ChatcatGPT_log.md';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        const downloadModal = document.getElementById('download-modal');
+        if (!downloadModal) {
+            let chatLog = document.getElementById('chat-box').innerText;
+            const date = new Date();
+            const formattedDate = date.toISOString().slice(0, 10);
+            const time = date.getHours() + "-" + date.getMinutes() + "-" + date.getSeconds();
+            let dataUri = 'data:text/plain;charset=utf-8,' + encodeURIComponent(chatLog);
+            let link = document.createElement('a');
+            link.href = dataUri;
+            link.download = `ChatcatGPT-${formattedDate}-${time}.md`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } else {
+            downloadModal.style.display = "block";
+        }
     });
     
     document.getElementById('send-btn').addEventListener('click', async () => {
@@ -176,4 +184,45 @@ document.addEventListener("DOMContentLoaded", function() {
         const selectedIdentity = document.getElementById('identity-selection');
         selectedIdentity.remove(selectedIdentity.selectedIndex);
     });
+
+    if (document.getElementById('download-modal')) {
+        const closeBtn = document.getElementsByClassName('close-btn')[1]; // Assuming the second close-btn is for the download modal
+        closeBtn.addEventListener('click', function() {
+            const downloadModal = document.getElementById('download-modal');
+            downloadModal.style.display = "none";
+        });
+
+        const downloadOptionBtns = document.querySelectorAll('.download-option-btn');
+        downloadOptionBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const fileType = btn.getAttribute('data-type');
+                downloadChatLog(fileType);
+            });
+        });
+    }
+
+    function downloadChatLog(fileType) {
+        let chatLog = document.getElementById('chat-box').innerText;
+        const date = new Date();
+        const formattedDate = date.toISOString().slice(0, 10);
+        const time = date.getHours() + "-" + date.getMinutes() + "-" + date.getSeconds();
+        const filename = `ChatcatGPT-${formattedDate}-${time}`;
+
+        switch (fileType) {
+            case 'txt':
+                saveAsTextFile(chatLog, filename + '.txt');
+                break;
+            case 'md':
+                saveAsTextFile(chatLog, filename + '.md');
+                break;
+            // TODO: Implement PDF and DOCX export
+            default:
+                alert('File type not supported yet.');
+        }
+
+        const downloadModal = document.getElementById('download-modal');
+        if (downloadModal) {
+            downloadModal.style.display = "none";
+        }
+    }
 });

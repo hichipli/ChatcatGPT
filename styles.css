@@ -175,3 +175,23 @@ body, button, textarea, select {
         margin-top: 25px;  /* adjust the margin */
     }
 }
+
+.modal-content {
+    position: relative;
+}
+
+.download-option-btn {
+    display: block;
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.download-option-btn:hover {
+    background-color: #0056b3;
+}
