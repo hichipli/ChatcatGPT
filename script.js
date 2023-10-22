@@ -264,7 +264,10 @@ document.addEventListener("DOMContentLoaded", function() {
     
     const cleanButton = document.getElementById('clean-btn');
     cleanButton.addEventListener('click', function() {
-        const chatBox = document.getElementById('chat-box');
-        chatBox.innerHTML = '';
+        const userConfirmed = confirm("Are you sure you want to clean up your chat logs?");
+        if (userConfirmed) {
+            const chatBox = document.getElementById('chat-box');
+            chatBox.innerHTML = '';
+        }
     });
 });
