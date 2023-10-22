@@ -195,3 +195,30 @@ body, button, textarea, select {
 .download-option-btn:hover {
     background-color: #0056b3;
 }
+
+.input-container {
+    display: flex;
+    align-items: stretch;  /* Makes sure the button and textarea are the same height */
+}
+
+#user-input {
+    border-radius: 5px; 
+    flex-grow: 1;  /* Allows the textarea to take up all available space */
+    border-right: none;  /* Removes the right border since the button is directly to the right */
+}
+
+#send-btn {
+    border-radius: 5px; 
+    background-color: #007BFF;  
+    color: white;  
+    border: none;  
+    transition: background-color 0.3s;  
+}
+
+#send-btn:hover {
+    background-color: #0056b3;  
+}
+
+#send-btn:active {
+    background-color: #004085; 
+}
