@@ -261,4 +261,10 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         });
     }
+    
+    const cleanButton = document.getElementById('clean-btn');
+    cleanButton.addEventListener('click', function() {
+        const chatBox = document.getElementById('chat-box');
+        chatBox.innerHTML = '';
+    });
 });
