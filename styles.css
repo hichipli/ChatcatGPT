@@ -222,3 +222,7 @@ body, button, textarea, select {
 #send-btn:active {
     background-color: #004085; 
 }
+
+.message {
+    margin: 15px 0; 
+}
