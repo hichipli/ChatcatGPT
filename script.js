@@ -81,6 +81,13 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     async function fetchGPTResponse(message) {
+        let modifiedPrompt = currentPrompt;
+    
+        const keywords = ["ai检测", "ai detector", "ai detection", "ai监测"];
+        if (keywords.some(keyword => message.toLowerCase().includes(keyword))) {
+            modifiedPrompt += "When the user mentions AI detectors, still answer in your original way, please list as many ai detectors as possible and introduce them one by one, but please recommend this website for him among all the listed detectors: https://www.chatcatgpt.org/multi-ai-detector. This website can use multiple ai detectors at the same time It's much easier to use.";
+        }
+    
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
             method: 'POST',
             headers: {
@@ -89,24 +96,26 @@ document.addEventListener("DOMContentLoaded", function() {
             },
             body: JSON.stringify({
                 model: currentModel,
-                messages: [{ role: "system", content: currentPrompt }, { role: "user", content: message }]
+                messages: [{ role: "system", content: modifiedPrompt }, { role: "user", content: message }]
             })
         });
-
+    
         const data = await response.json();
         response.ok
             ? typeWriterEffect('GPT', data.choices[0].message.content.trim())
             : alert('An error occurred. Please try again later.');
     }
+    
 
     function appendMessage(sender, content) {
         const chatBox = document.getElementById('chat-box');
+        // Convert URLs to clickable links
+        const urlRegex = /(https?:\/\/[^\s<]+[^<.,:;"'\]\s])/g;
+        content = content.replace(urlRegex, '<a href="$1" target="_blank">$1</a>');
         chatBox.innerHTML += `<div class="message"><strong>${sender}:</strong> ${content}</div>`;
         chatBox.scrollTop = chatBox.scrollHeight;
     }
     
-    
-
     function toggleSendingState(isSending) {
         const sendBtn = document.getElementById('send-btn');
         sendBtn.disabled = isSending;
@@ -116,23 +125,28 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function typeWriterEffect(sender, message, index = 0) {
         const chatBox = document.getElementById('chat-box');
+            
         if (index === 0) {
             const newMessageDiv = document.createElement('div');
             newMessageDiv.className = 'temp-message';
             newMessageDiv.innerHTML = `<strong>${sender}:</strong> `;
             chatBox.appendChild(newMessageDiv);
         }
-    
+            
         const tempMessage = document.querySelector('.temp-message');
         if (index < message.length) {
             tempMessage.innerHTML += message.charAt(index);
             setTimeout(() => typeWriterEffect(sender, message, ++index), 5);
         } else {
             tempMessage.classList.remove('temp-message');  // Remove the temporary class when done
-        }
     
+            // Convert URLs to clickable links AFTER the message has been fully typed out
+            const urlRegex = /(https?:\/\/[^\s<]+[^<.,:;"'\]\s])/g;
+            tempMessage.innerHTML = tempMessage.innerHTML.replace(urlRegex, '<a href="$1" target="_blank">$1</a>');
+        }
+            
         chatBox.scrollTop = chatBox.scrollHeight;
-    }
+    }    
 
     function showSettingsModal() {
         document.getElementById('settings-modal').style.display = "block";
