@@ -50,6 +50,13 @@ Choose the method that best suits your preferences and enjoy your ChatcatGPT exp
 4. Revamped the settings window presentation.
 4. Addressed and resolved various minor issues.
 
+### October 25, 2023:
+
+1. Began enhancing the typewriter effect for chat simulation.
+2. Optimized regular expressions to better identify and hyperlink URLs in chat.
+3. Troubleshot issues with certain URL terminations, particularly with punctuation marks.
+4. Ongoing refinement of user interactions for a more immersive chat experience.
+
 We warmly invite the community to join us in this endeavor.
 
 Experience the power of AI with ChatcatGPT today!
