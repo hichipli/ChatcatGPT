@@ -65,11 +65,11 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     document.getElementById('user-input').addEventListener('keydown', function(event) {
-        if (event.key === 'Enter') {
+        if (event.key === 'Enter' && !event.shiftKey) {
             event.preventDefault();  
-            handleUserMessage();   
+            handleUserMessage();  
         }
-    });
+    });    
 
     async function handleUserMessage() {
         const userInput = document.getElementById('user-input').value;
@@ -126,7 +126,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function toggleSendingState(isSending) {
         const sendBtn = document.getElementById('send-btn');
         sendBtn.disabled = isSending;
-        sendBtn.querySelector('.btn-text').textContent = isSending ? 'Loading...' : 'Send';
+        sendBtn.querySelector('.btn-text').textContent = isSending ? 'Loading...' : 'Send (Enter)';
         sendBtn.querySelector('.loader').style.display = isSending ? 'inline-block' : 'none';
     }
 
