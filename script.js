@@ -24,7 +24,11 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     document.querySelectorAll('.close-btn').forEach(btn => btn.addEventListener('click', closeModal));
-    document.getElementById('clean-btn').addEventListener('click', cleanChatBox);
+    document.getElementById('clean-btn').addEventListener('click', function() {
+        if (confirm('Are you sure you want to clear the chat? This action cannot be undone.')) {
+            cleanChatBox();
+        }
+    });
 
     function addIdentityToSelection(identity) {
         const option = document.createElement('option');
@@ -221,15 +225,6 @@ document.addEventListener("DOMContentLoaded", function() {
         downloadAsFile(chatLog, '.txt');
     }
 
-    // function downloadMarkdown() {
-    //     const chatBox = document.getElementById('chat-box');
-    //     const chatLines = chatBox.innerHTML.split('<br><br>');
-    //     const markdownContent = chatLines.map(line => {
-    //         const [sender, message] = line.split(': ');
-    //         return `**${sender.trim()}**: ${message.trim()}`;
-    //     }).join('\n\n');
-    //     downloadAsFile(markdownContent, '.md');
-    // }
     function downloadMarkdown() {
         const chatBox = document.getElementById('chat-box');
         const chatLines = chatBox.childNodes;
