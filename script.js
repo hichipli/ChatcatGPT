@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function() {
         document.body.removeChild(link);
     }
 
-    document.getElementById('user-input').addEventListener('keyup', function(event) {
+    document.getElementById('user-input').addEventListener('keydown', function(event) {
         if (event.key === 'Enter') {
             event.preventDefault();  
             handleUserMessage();   
