@@ -232,7 +232,11 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function downloadAsFile(content, fileExtension) {
-        const dataUri = 'data:text/plain;charset=utf-8,' + encodeURIComponent(content);
+        let mimeType = 'data:text/plain;charset=utf-8,';
+        if (fileExtension === '.md') {
+            mimeType = 'data:text/markdown;charset=utf-8,'; // or keep 'text/plain' if 'text/markdown' doesn't work
+        }
+        const dataUri = mimeType + encodeURIComponent(content);
         const link = document.createElement('a');
         link.href = dataUri;
         link.download = `ChatcatGPT-${getFormattedDate()}-${new Date().toLocaleTimeString('en-US', { hour12: false }).replace(/:/g, '-')}${fileExtension}`;
