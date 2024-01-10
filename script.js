@@ -231,9 +231,24 @@ document.addEventListener("DOMContentLoaded", function() {
     //     downloadAsFile(markdownContent, '.md');
     // }
     function downloadMarkdown() {
-        const markdownContent = "# Test Markdown\n\nThis is a test.";
+        const chatBox = document.getElementById('chat-box');
+        const chatLines = chatBox.childNodes;
+        let markdownContent = '';
+    
+        chatLines.forEach(node => {
+            if (node.nodeType === Node.TEXT_NODE) {
+                markdownContent += node.textContent.trim() + '\n\n';
+            } else if (node.nodeType === Node.ELEMENT_NODE) {
+                if (node.tagName === 'STRONG') {
+                    markdownContent += `**${node.textContent.trim()}:** `;
+                } else {
+                    markdownContent += node.textContent.trim() + '\n\n';
+                }
+            }
+        });
+    
         downloadAsFile(markdownContent, '.md');
-    }
+    }    
 
     function downloadAsFile(content, fileExtension) {
         let mimeType = 'data:text/plain;charset=utf-8,';
