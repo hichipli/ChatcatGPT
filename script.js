@@ -221,13 +221,17 @@ document.addEventListener("DOMContentLoaded", function() {
         downloadAsFile(chatLog, '.txt');
     }
 
+    // function downloadMarkdown() {
+    //     const chatBox = document.getElementById('chat-box');
+    //     const chatLines = chatBox.innerHTML.split('<br><br>');
+    //     const markdownContent = chatLines.map(line => {
+    //         const [sender, message] = line.split(': ');
+    //         return `**${sender.trim()}**: ${message.trim()}`;
+    //     }).join('\n\n');
+    //     downloadAsFile(markdownContent, '.md');
+    // }
     function downloadMarkdown() {
-        const chatBox = document.getElementById('chat-box');
-        const chatLines = chatBox.innerHTML.split('<br><br>');
-        const markdownContent = chatLines.map(line => {
-            const [sender, message] = line.split(': ');
-            return `**${sender.trim()}**: ${message.trim()}`;
-        }).join('\n\n');
+        const markdownContent = "# Test Markdown\n\nThis is a test.";
         downloadAsFile(markdownContent, '.md');
     }
 
