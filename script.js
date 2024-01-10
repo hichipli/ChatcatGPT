@@ -64,6 +64,13 @@ document.addEventListener("DOMContentLoaded", function() {
         document.body.removeChild(link);
     }
 
+    document.getElementById('user-input').addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();  
+            handleUserMessage();   
+        }
+    });
+
     async function handleUserMessage() {
         const userInput = document.getElementById('user-input').value;
 
