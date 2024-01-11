@@ -248,7 +248,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function downloadAsFile(content, fileExtension) {
         let mimeType = 'data:text/plain;charset=utf-8,';
         if (fileExtension === '.md') {
-            mimeType = 'data:text/markdown;charset=utf-8,'; // or keep 'text/plain' if 'text/markdown' doesn't work
+            mimeType = 'data:text/markdown;charset=utf-8,'; 
         }
         const dataUri = mimeType + encodeURIComponent(content);
         const link = document.createElement('a');
