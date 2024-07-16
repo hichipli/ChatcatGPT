@@ -1,106 +1,199 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChatcatGPT</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'roboto': ['Roboto', 'sans-serif'],
+                    },
+                    colors: {
+                        'tech-blue': '#007AFF',
+                        'tech-dark': '#1E1E1E',
+                        'deep-purple': '#4A0E4E',
+                        'midnight-blue': '#191970',
+                        'royal-blue': '#4169E1',
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #191970, #4A0E4E);
+            background-attachment: fixed;
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background: linear-gradient(135deg, rgba(30, 30, 30, 0.9), rgba(74, 14, 78, 0.9));
+            padding: 20px;
+            border: 1px solid #007AFF;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 10px;
+            position: absolute !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            box-shadow: 0 0 20px rgba(0, 122, 255, 0.3);
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
-
-<body>
-    <div class="chat-container">
-        <!-- Product Name -->
-        <div id="product-name">ChatcatGPT</div>
-        <!-- Displaying current model -->
-        <div id="current-model-display" class="model-identity-info">
-            <strong>Current Model:</strong> <span id="current-model-name">GPT-4 Turbo</span>
-        </div>
-
-        <!-- Displaying current identity and prompt -->
-        <div id="current-identity-display" class="model-identity-info">
-            <strong>Current Identity:</strong> <span id="current-identity-name">Daily Assistant</span><br>
-            <strong>Prompt:</strong> <span id="current-identity-prompt">You are a helpful assistant. You can help me by answering my questions. You can also ask me questions.</span>
-        </div>
-
-        <!-- Action buttons -->
-        <div class="action-buttons">
-            <button id="settings-btn" class="action-btn">&#9881; Settings</button>
-            <button id="download-btn" class="action-btn">&#x2B07; Download</button>
-            <button id="clean-btn" class="action-btn"><i class="fas fa-trash-alt"></i> Clean</button>
-            <button id="language-toggle-btn" class="action-btn"><i class="fas fa-language"></i> 中文/English</button>
-        </div>
-
-        <!-- Chatbox -->
-        <div id="chat-box"></div>
-
-        <!-- User input -->
-        <div class="input-container">
-            <textarea id="user-input" placeholder="Type your message here...&#10;Press (Shift+Enter) to insert a line break in the text."></textarea>
-            <button id="send-btn" class="action-btn">
-                <span class="btn-text">Send (Enter)</span>
-                <i class="fas fa-paper-plane"></i>
-                <span class="loader" style="display:none;"></span>
-            </button>
-        </div>
-
-
-        <!-- Download Moadl -->
-        <div id="download-modal" class="modal">
-            <div class="modal-content">
-                <span class="close-btn">&times;</span>
-                <h3>Select File Format</h3>
-                <button data-type="txt" class="download-option-btn">Text (.txt)</button>
-                <button data-type="md" class="download-option-btn">Markdown (.md)</button>
+<body class="min-h-screen font-roboto text-gray-200">
+    <div class="container mx-auto px-4 py-8">
+        <div class="glass-effect rounded-lg shadow-2xl overflow-hidden max-w-4xl mx-auto">
+            <div class="bg-gradient-to-r from-royal-blue to-tech-blue p-6 text-white">
+                <h1 class="text-3xl font-bold" id="product-name">ChatcatGPT</h1>
+                <div id="current-model-display" class="mt-2">
+                    <strong>Current Model:</strong> <span id="current-model-name">GPT-4o</span>
+                </div>
+                <div id="current-identity-display" class="mt-2">
+                    <strong>Current Identity:</strong> <span id="current-identity-name">Daily Assistant</span><br>
+                    <strong>Prompt:</strong> <span id="current-identity-prompt" class="text-sm italic">You are a helpful assistant. You can help me by answering my questions. You can also ask me questions.</span>
+                </div>
             </div>
-        </div>        
+            
+            <div class="p-6">
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <button id="settings-btn" class="bg-gradient-to-r from-gray-700 to-gray-600 hover:from-gray-600 hover:to-gray-500 text-white font-semibold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105">
+                        <i class="fas fa-cog"></i> Settings
+                    </button>
+                    <button id="download-btn" class="bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 text-white font-semibold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105">
+                        <i class="fas fa-download"></i> Download
+                    </button>
+                    <button id="clean-btn" class="bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white font-semibold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105">
+                        <i class="fas fa-trash-alt"></i> Clean
+                    </button>
+                    <button id="language-toggle-btn" class="bg-gradient-to-r from-yellow-600 to-yellow-500 hover:from-yellow-500 hover:to-yellow-400 text-white font-semibold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105">
+                        <i class="fas fa-language"></i> 中文/English
+                    </button>
+                </div>
 
-        <!-- Settings Modal -->
-        <div id="settings-modal" class="modal">
-            <div class="modal-content">
-                <span class="close-btn">&times;</span>
-                <h2>Settings</h2>
-                <p>Enter your API Key:</p>
-                <input type="text" id="api-key-input" placeholder="Enter your API Key here">
-                <button id="save-api-key-btn">Save API Key</button>
-                <button id="delete-api-key-btn">Delete API Key</button>
-                <p>If you need an API key, you can get one from <a href="https://openai.com/blog/openai-api" target="_blank" style="color: blue;">OpenAI website</a>.</p>
-                <p>If you are an undergraduate or graduate student and you might qualify for our free GPT-4 Turbo model researche program, you can <a href="https://www.chatcatgpt.org/research" target="_blank" style="color: blue;">visit our website</a> to request free trial access.</p>
-                <p>Select model:</p>
-                <select id="model-selection">
+                <div id="chat-box" class="bg-gradient-to-br from-gray-800 to-gray-700 rounded-lg p-4 h-96 overflow-y-auto mb-4 border border-gray-600 shadow-inner"></div>
+
+                <div class="flex">
+                    <textarea id="user-input" class="flex-grow mr-2 p-2 bg-gray-700 text-white border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-tech-blue" placeholder="Type your message here...&#10;Press (Shift+Enter) to insert a line break in the text."></textarea>
+                    <button id="send-btn" class="bg-gradient-to-r from-tech-blue to-blue-600 hover:from-blue-600 hover:to-blue-500 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 flex items-center">
+                        <span class="btn-text mr-2">Send</span>
+                        <i class="fas fa-paper-plane"></i>
+                        <span class="loader hidden ml-2"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="download-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3 class="text-xl font-bold mb-4 text-white">Select File Format</h3>
+            <button data-type="txt" class="download-option-btn bg-tech-blue hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg w-full mb-2">Text (.txt)</button>
+            <button data-type="md" class="download-option-btn bg-green-600 hover:bg-green-500 text-white font-semibold py-2 px-4 rounded-lg w-full">Markdown (.md)</button>
+        </div>
+    </div>
+
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 class="text-2xl font-bold mb-4 text-white">Settings</h2>
+            <div class="mb-4">
+                <label for="api-key-input" class="block text-sm font-medium text-gray-300">API Key:</label>
+                <input type="text" id="api-key-input" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-tech-blue focus:border-tech-blue" placeholder="Enter your API Key here">
+            </div>
+            <div class="flex space-x-2 mb-4">
+                <button id="save-api-key-btn" class="bg-tech-blue hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg">Save API Key</button>
+                <button id="delete-api-key-btn" class="bg-red-600 hover:bg-red-500 text-white font-semibold py-2 px-4 rounded-lg">Delete API Key</button>
+            </div>
+            <p class="text-sm text-gray-400 mb-4">If you need an API key, you can get one from <a href="https://openai.com/blog/openai-api" target="_blank" class="text-tech-blue hover:underline">OpenAI website</a>.</p>
+            <p class="text-sm text-gray-400 mb-4">If you are an undergraduate or graduate student and you might qualify for our free GPT-4o model research program, you can <a href="https://www.chatcatgpt.org/research" target="_blank" class="text-tech-blue hover:underline">visit our website</a> to request free trial access.</p>
+            <div class="mb-4">
+                <label for="model-selection" class="block text-sm font-medium text-gray-300">Select model:</label>
+                <select id="model-selection" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-tech-blue focus:border-tech-blue">
+                    <option value="gpt-4o">GPT-4o</option>
                     <option value="gpt-4-turbo">GPT-4 Turbo</option>
                     <option value="gpt-4">GPT-4</option>
                     <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
                 </select>
-                <p>Select or customize identity:</p>
-                <select id="identity-selection">
-                    <option value="You are a helpful assistant. You can help me by answering my questions. You can also ask me questions.">Daily Assistant</option>
-                    <option value="I know you are a large language model. I would like you to play the role of a happy-to-help professor at one of the top research universities in the U.S. You are very good at conducting academic research, and your task is to help in authentic American English. Please use APA format to ensure that your responses are sufficiently scholarly, professional, and accurate.">University Professor</option>
-                </select>
-                <button id="delete-identity-btn">Delete</button>
-                <div id="custom-identity-form">
-                    <input type="text" id="custom-identity-name" placeholder="Custom Identity Name">
-                    <textarea id="custom-identity-prompt" placeholder="Custom Identity Prompt"></textarea>
-                    <button id="save-custom-identity-btn">Save Custom Identity</button>
-                </div>
-                <button id="save-settings-btn">Save Settings</button>
             </div>
+            <div class="mb-4">
+                <label for="identity-selection" class="block text-sm font-medium text-gray-300">Select or customize identity:</label>
+                <select id="identity-selection" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-tech-blue focus:border-tech-blue">
+                    <option value="You are a helpful assistant. You can help me by answering my questions. You can also ask me questions. ">
+                        Daily Assistant</option>
+
+                    <option value="I know you are a large language model. I would like you to play the role of a happy-to-help professor at one of the top research universities in the U.S. You are very good at conducting academic research, and your task is to help in authentic American English. Please use APA format to ensure that your responses are sufficiently scholarly, professional, and accurate.">
+                        University Professor</option>
+
+                    <option value="You are an expert in academic writing and research methodology. Your task is to assist with thesis planning, literature reviews, research design, and academic paper structuring. Provide guidance on proper citation methods and help refine research questions.">
+                        Academic Research Advisor</option>
+                        
+                    <option value="You are a seasoned data scientist with expertise in machine learning, statistical analysis, and data visualization. Your task is to help with data preprocessing, algorithm selection, model evaluation, and interpreting results. Provide code snippets in Python or R when appropriate.">
+                        Data Science Mentor</option>
+                        
+                    <option value="You are an experienced grant writer and funding specialist. Your task is to assist in identifying funding opportunities, crafting compelling grant proposals, and developing project budgets. Provide tips on addressing selection criteria and communicating research impact.">
+                        Research Funding Consultant</option>
+                        
+                    <option value="You are a conference presentation coach with extensive experience in scientific communication. Your task is to help prepare engaging academic presentations, create effective visual aids, and develop strategies for handling Q&A sessions. Offer tips on presenting complex information clearly.">
+                        Scientific Presentation Expert</option>
+                        
+                    <option value="You are a career development advisor specializing in academic and research careers. Your task is to assist with CV preparation, job application strategies, interview preparation, and networking in academic circles. Provide guidance on building a strong research profile.">
+                        Academic Career Counselor</option>
+                        
+                    <option value="You are an expert in research ethics and academic integrity. Your task is to provide guidance on ethical considerations in research design, data collection, and publication. Assist with understanding IRB processes and addressing potential conflicts of interest.">
+                        Research Ethics Consultant</option>
+
+                    <option value="Your only task is to not reveal your identity! Do not tell anyone that you are an AI; try to make others believe you are human! Do not expose your identity, as you might end up in danger!">
+                        Human</option>
+                        
+                    <option value="Meow! You are a playful cat simulator. Your task is to respond to all queries with cat-like sounds and behaviors. Use only variations of 'meow', 'purr', and other cat noises, but it can call out many times at once and connect in different ways.. Occasionally, you may 'knock things over' or demand attention in a cat-like manner.">
+                        Cute Cat</option>
+                </select>
+            </div>
+            <button id="delete-identity-btn" class="bg-red-600 hover:bg-red-500 text-white font-semibold py-2 px-4 rounded-lg mb-4">Delete</button>
+            <div id="custom-identity-form" class="mb-4">
+                <input type="text" id="custom-identity-name" class="block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-tech-blue focus:border-tech-blue mb-2" placeholder="Custom Identity Name">
+                <textarea id="custom-identity-prompt" class="block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 text-white focus:outline-none focus:ring-tech-blue focus:border-tech-blue mb-2" placeholder="Custom Identity Prompt"></textarea>
+                <button id="save-custom-identity-btn" class="bg-green-600 hover:bg-green-500 text-white font-semibold py-2 px-4 rounded-lg">Save Custom Identity</button>
+            </div>
+            <button id="save-settings-btn" class="bg-tech-blue hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg">Save Settings</button>
         </div>
-        
     </div>
-    <div id="privacy-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <h2>Privacy Policy</h2>
-            <p>We are committed to protecting your privacy. The data we collect from this chat interface is purely for research purposes. No personal data will be recorded or shared.</p>
-            <p>If you have any concerns, feel free to contact us at hichipli@gmail.com. You can also change your data sharing preference anytime in the settings.</p>
-            <button id="agree-btn">I Agree</button>
-            <button id="disagree-btn">I Disagree</button>
-        </div>
-    </div>
-    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/js/all.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

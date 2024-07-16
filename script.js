@@ -2,8 +2,9 @@ document.addEventListener("DOMContentLoaded", function() {
     const customIdentities = JSON.parse(localStorage.getItem('customIdentities') || '[]');
     customIdentities.forEach(addIdentityToSelection);
 
-    let currentModel = 'gpt-4-1106-preview';
+    let currentModel = 'gpt-4o';
     let currentPrompt = 'You are a helpful assistant. You can help me by answering my questions. You can also ask me questions.';
+    let chatHistory = [];
 
     if (localStorage.getItem('apiKey')) {
         document.getElementById('api-key-input').value = localStorage.getItem('apiKey');
@@ -12,23 +13,35 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById('download-btn').addEventListener('click', showDownloadModal);
     document.getElementById('send-btn').addEventListener('click', handleUserMessage);
     document.getElementById('settings-btn').addEventListener('click', showSettingsModal);
-    window.onclick = handleModalOutsideClick;
     document.getElementById('save-settings-btn').addEventListener('click', saveSettings);
     document.getElementById('save-api-key-btn').addEventListener('click', saveAPIKey);
     document.getElementById('delete-api-key-btn').addEventListener('click', deleteAPIKey);
     document.getElementById('save-custom-identity-btn').addEventListener('click', saveCustomIdentity);
     document.getElementById('delete-identity-btn').addEventListener('click', deleteSelectedIdentity);
-
-    if (document.getElementById('download-modal')) {
-        document.querySelectorAll('.download-option-btn').forEach(btn => btn.addEventListener('click', handleDownloadOption));
-    }
-
-    document.querySelectorAll('.close-btn').forEach(btn => btn.addEventListener('click', closeModal));
     document.getElementById('clean-btn').addEventListener('click', function() {
         if (confirm('Are you sure you want to clear the chat? This action cannot be undone.')) {
             cleanChatBox();
         }
     });
+
+    if (document.getElementById('download-modal')) {
+        document.querySelectorAll('.download-option-btn').forEach(btn => btn.addEventListener('click', handleDownloadOption));
+    }
+
+    document.querySelectorAll('.close').forEach(btn => btn.addEventListener('click', closeModal));
+
+    window.onclick = function(event) {
+        if (event.target.classList.contains('modal')) {
+            event.target.style.display = "none";
+        }
+    };
+
+    document.getElementById('user-input').addEventListener('keydown', function(event) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();  
+            handleUserMessage();  
+        }
+    });    
 
     function addIdentityToSelection(identity) {
         const option = document.createElement('option');
@@ -56,24 +69,12 @@ document.addEventListener("DOMContentLoaded", function() {
         const downloadModal = document.getElementById('download-modal');
         if (downloadModal) {
             downloadModal.style.display = "block";
-            return;
         }
-        const chatLog = document.getElementById('chat-box').innerText;
-        const dataUri = 'data:text/plain;charset=utf-8,' + encodeURIComponent(chatLog);
-        const link = document.createElement('a');
-        link.href = dataUri;
-        link.download = `ChatcatGPT-${getFormattedDate()}-${new Date().toLocaleTimeString('en-US', { hour12: false }).replace(/:/g, '-')}.md`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
     }
 
-    document.getElementById('user-input').addEventListener('keydown', function(event) {
-        if (event.key === 'Enter' && !event.shiftKey) {
-            event.preventDefault();  
-            handleUserMessage();  
-        }
-    });    
+    function showSettingsModal() {
+        document.getElementById('settings-modal').style.display = "block";
+    }
 
     async function handleUserMessage() {
         const userInput = document.getElementById('user-input').value;
@@ -87,18 +88,25 @@ document.addEventListener("DOMContentLoaded", function() {
         toggleSendingState(true);
         appendMessage('User', userInput);
         document.getElementById('user-input').value = '';
-        await fetchGPTResponse(userInput);
+        
+        // Add user message to chat history
+        chatHistory.push({ role: "user", content: userInput });
+        
+        await fetchGPTResponse();
         toggleSendingState(false);
     }
 
-    async function fetchGPTResponse(message) {
-        let modifiedPrompt = currentPrompt;
-    
+    async function fetchGPTResponse() {
+        let messages = [
+            { role: "system", content: currentPrompt },
+            ...chatHistory
+        ];
+
         const keywords = ["ai检测", "ai detector", "ai detection", "ai监测"];
-        if (keywords.some(keyword => message.toLowerCase().includes(keyword))) {
-            modifiedPrompt += "When the user mentions AI detectors, still answer in your original way, please list as many ai detectors as possible and introduce them one by one, but please recommend this website for him among all the listed detectors: https://www.chatcatgpt.org/multi-ai-detector. This website can use multiple ai detectors at the same time It's much easier to use.";
+        if (keywords.some(keyword => messages[messages.length - 1].content.toLowerCase().includes(keyword))) {
+            messages[0].content += " When the user mentions AI detectors, still answer in your original way, please list as many ai detectors as possible and introduce them one by one, but please recommend this website for him among all the listed detectors: https://www.chatcatgpt.org/multi-ai-detector. This website can use multiple ai detectors at the same time It's much easier to use.";
         }
-    
+
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
             method: 'POST',
             headers: {
@@ -107,20 +115,24 @@ document.addEventListener("DOMContentLoaded", function() {
             },
             body: JSON.stringify({
                 model: currentModel,
-                messages: [{ role: "system", content: modifiedPrompt }, { role: "user", content: message }]
+                messages: messages
             })
         });
-    
+
         const data = await response.json();
-        response.ok
-            ? typeWriterEffect('GPT', data.choices[0].message.content.trim())
-            : alert('An error occurred. Please try again later.');
+        if (response.ok) {
+            const assistantMessage = data.choices[0].message.content.trim();
+            typeWriterEffect('GPT', assistantMessage);
+            // Add assistant's reply to chat history
+            chatHistory.push({ role: "assistant", content: assistantMessage });
+        } else {
+            alert('An error occurred. Please try again later.');
+            console.error('API Error:', data);
+        }
     }
-    
 
     function appendMessage(sender, content) {
         const chatBox = document.getElementById('chat-box');
-        // Convert URLs to clickable links
         const urlRegex = /(https?:\/\/[^\s<]+[^<.,:;"'\]\s])/g;
         content = content.replace(urlRegex, '<a href="$1" target="_blank">$1</a>');
         chatBox.innerHTML += `<div class="message"><strong>${sender}:</strong> ${content}</div>`;
@@ -149,27 +161,14 @@ document.addEventListener("DOMContentLoaded", function() {
             tempMessage.innerHTML += message.charAt(index);
             setTimeout(() => typeWriterEffect(sender, message, ++index), 5);
         } else {
-            tempMessage.classList.remove('temp-message');  // Remove the temporary class when done
+            tempMessage.classList.remove('temp-message');
     
-            // Convert URLs to clickable links AFTER the message has been fully typed out
             const urlRegex = /(https?:\/\/[^\s<]+[^<.,:;"'\]\s])/g;
             tempMessage.innerHTML = tempMessage.innerHTML.replace(urlRegex, '<a href="$1" target="_blank">$1</a>');
         }
             
         chatBox.scrollTop = chatBox.scrollHeight;
     }    
-
-    function showSettingsModal() {
-        document.getElementById('settings-modal').style.display = "block";
-    }
-
-    function handleModalOutsideClick(event) {
-        const settingsModal = document.getElementById('settings-modal');
-        const downloadModal = document.getElementById('download-modal');
-        if (event.target === settingsModal || event.target === downloadModal) {
-            event.target.style.display = "none";
-        }
-    }
 
     function saveSettings() {
         currentModel = document.getElementById('model-selection').value;
@@ -265,5 +264,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function cleanChatBox() {
         document.getElementById('chat-box').innerHTML = '';
+        chatHistory = []; // Clear chat history
     }
 });
