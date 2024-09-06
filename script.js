@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
         if (!userInput) return alert('Please enter a message.');
         if (!localStorage.getItem('apiKey') || !document.getElementById('api-key-input').value) {
-            alert('Please provide your API key in settings.');
+            alert('Please provide your API key in the settings.');
             return showSettingsModal();
         }
 
@@ -101,17 +101,51 @@ document.addEventListener("DOMContentLoaded", function() {
         // Add user message to chat history
         chatHistory.push({ role: "user", content: userInput });
         
-        await fetchGPTResponse();
-        toggleSendingState(false);
+        try {
+            await fetchGPTResponse();
+        } catch (error) {
+            alert(`An error occurred: ${error.message}`);
+            console.error('API Error:', error);
+        } finally {
+            toggleSendingState(false);
+        }
     }
 
+    function appendMessage(sender, content) {
+        const chatBox = document.getElementById('chat-box');
+        const messageElement = document.createElement('div');
+        messageElement.className = `message ${sender.toLowerCase()}-message`;
+        const currentTime = new Date().toLocaleTimeString('en-US', { hour12: false });
+        messageElement.innerHTML = `
+            <div class="message-header">
+                <span class="message-name">${sender}</span>
+                <span class="message-time">${currentTime}</span>
+            </div>
+            <div class="message-content"></div>
+            <button class="copy-btn" onclick="copyMessage(this)">
+                <i class="fas fa-copy"></i>
+            </button>
+        `;
+        chatBox.appendChild(messageElement);
+
+        const contentElement = messageElement.querySelector('.message-content');
+        if (typeof marked !== 'undefined') {
+            contentElement.innerHTML = marked.parse(content);
+        } else {
+            contentElement.textContent = content;
+        }
+        applyMarkdownStyles(contentElement);
+
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+    
     async function fetchGPTResponse() {
         let messages = [
             { role: "system", content: currentPrompt },
             ...chatHistory
         ];
 
-        const keywords = ["ai检测", "ai detector", "ai detection", "ai测"];
+        const keywords = ["ai detection", "ai detector", "detect ai"];
         if (keywords.some(keyword => messages[messages.length - 1].content.toLowerCase().includes(keyword))) {
             messages[0].content += " When the user mentions AI detectors, still answer in your original way, please list as many ai detectors as possible and introduce them one by one, but please recommend this website for him among all the listed detectors: https://www.chatcatgpt.org/multi-ai-detector. This website can use multiple ai detectors at the same time It's much easier to use.";
         }
@@ -124,47 +158,77 @@ document.addEventListener("DOMContentLoaded", function() {
             },
             body: JSON.stringify({
                 model: currentModel,
-                messages: messages
+                messages: messages,
+                stream: true // Enable streaming
             })
         });
 
-        const data = await response.json();
-        if (response.ok) {
-            const assistantMessage = data.choices[0].message.content.trim();
-            typeWriterEffect('GPT', assistantMessage);
-            // Add assistant's reply to chat history
-            chatHistory.push({ role: "assistant", content: assistantMessage });
-        } else {
-            alert('An error occurred. Please try again later.');
-            console.error('API Error:', data);
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`API Error: ${errorData.error.message}`);
         }
-    }
 
-    function appendMessage(sender, content) {
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder("utf-8");
+        let assistantMessage = '';
+        let buffer = '';
+
+        // Create a new message element
         const chatBox = document.getElementById('chat-box');
-        const urlRegex = /(https?:\/\/[^\s<]+[^<.,:;"'\]\s])/g;
-        content = content.replace(urlRegex, '<a href="$1" target="_blank">$1</a>');
-        
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${sender === 'User' ? 'user-message' : 'gpt-message'}`;
-        
+        const messageElement = document.createElement('div');
+        messageElement.className = 'message gpt-message';
         const currentTime = new Date().toLocaleTimeString('en-US', { hour12: false });
-        
-        messageDiv.innerHTML = `
+        messageElement.innerHTML = `
             <div class="message-header">
-                <span class="message-name">${sender}</span>
+                <span class="message-name">GPT</span>
                 <span class="message-time">${currentTime}</span>
             </div>
-            <div class="message-content">${content}</div>
+            <div class="message-content"></div>
             <button class="copy-btn" onclick="copyMessage(this)">
                 <i class="fas fa-copy"></i>
             </button>
         `;
-        
-        chatBox.appendChild(messageDiv);
-        chatBox.scrollTop = chatBox.scrollHeight;
+        chatBox.appendChild(messageElement);
+        const contentElement = messageElement.querySelector('.message-content');
+
+        while (true) {
+            const { done, value } = await reader.read();
+            if (done) {
+                break;
+            }
+            
+            buffer += decoder.decode(value, {stream: true});
+            const lines = buffer.split('\n');
+            buffer = lines.pop();
+
+            for (const line of lines) {
+                const trimmedLine = line.trim();
+                if (trimmedLine === '') continue;
+                if (trimmedLine === 'data: [DONE]') break;
+                if (trimmedLine.startsWith('data: ')) {
+                    try {
+                        const parsedLine = JSON.parse(trimmedLine.slice(5));
+                        const content = parsedLine.choices[0].delta.content;
+                        if (content) {
+                            assistantMessage += content;
+                            if (typeof marked !== 'undefined') {
+                                contentElement.innerHTML = marked.parse(assistantMessage);
+                            } else {
+                                contentElement.textContent = assistantMessage;
+                            }
+                            applyMarkdownStyles(contentElement);
+                            chatBox.scrollTop = chatBox.scrollHeight;
+                        }
+                    } catch (error) {
+                        console.error('Error parsing JSON:', error, 'Line:', trimmedLine);
+                    }
+                }
+            }
+        }
+
+        chatHistory.push({ role: "assistant", content: assistantMessage });
     }
-    
+
     function toggleSendingState(isSending) {
         const sendBtn = document.getElementById('send-btn');
         sendBtn.disabled = isSending;
@@ -172,14 +236,15 @@ document.addEventListener("DOMContentLoaded", function() {
         sendBtn.querySelector('.loader').style.display = isSending ? 'inline-block' : 'none';
     }
 
-    function typeWriterEffect(sender, message, index = 0) {
+    function typeWriterEffect(sender, message) {
         const chatBox = document.getElementById('chat-box');
-            
-        if (index === 0) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message gpt-message temp-message`;
+        let messageElement = document.querySelector('.temp-message');
+        
+        if (!messageElement) {
+            messageElement = document.createElement('div');
+            messageElement.className = `message gpt-message temp-message`;
             const currentTime = new Date().toLocaleTimeString('en-US', { hour12: false });
-            messageDiv.innerHTML = `
+            messageElement.innerHTML = `
                 <div class="message-header">
                     <span class="message-name">${sender}</span>
                     <span class="message-time">${currentTime}</span>
@@ -189,24 +254,26 @@ document.addEventListener("DOMContentLoaded", function() {
                     <i class="fas fa-copy"></i>
                 </button>
             `;
-            chatBox.appendChild(messageDiv);
+            chatBox.appendChild(messageElement);
         }
-            
-        const tempMessage = document.querySelector('.temp-message .message-content');
-        if (index < message.length) {
-            tempMessage.innerHTML += message.charAt(index);
-            setTimeout(() => typeWriterEffect(sender, message, ++index), 5);
+        
+        const contentElement = messageElement.querySelector('.message-content');
+        
+        // Check if marked is defined
+        if (typeof marked !== 'undefined') {
+            // Use marked to parse Markdown
+            contentElement.innerHTML = marked.parse(message);
         } else {
-            const messageDiv = tempMessage.closest('.message');
-            messageDiv.classList.remove('temp-message');
-
-            const urlRegex = /(https?:\/\/[^\s<]+[^<.,:;"'\]\s])/g;
-            tempMessage.innerHTML = tempMessage.innerHTML.replace(urlRegex, '<a href="$1" target="_blank">$1</a>');
+            // If marked is not defined, use plain text
+            contentElement.textContent = message;
         }
-            
-        chatBox.scrollTop = chatBox.scrollHeight;
-    }    
 
+        // Apply Markdown styles
+        applyMarkdownStyles(contentElement);
+        
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+    
     function updateModelDropdown() {
         const dropdown = document.querySelector('.model-dropdown');
         dropdown.innerHTML = modelOptions.map(option => 
@@ -437,4 +504,97 @@ function copyMessage(button) {
     navigator.clipboard.writeText(messageContent).then(() => {
         alert('Copied to clipboard!');
     });
+}
+
+function parseMarkdown(text) {
+    // Handle code blocks
+    text = text.replace(/```(\w+)?\n([\s\S]*?)```/g, function(match, lang, code) {
+        // Remove spaces at the beginning of each line, but keep relative indentation
+        const lines = code.split('\n');
+        const minIndent = lines.reduce((min, line) => {
+            const indent = line.match(/^\s*/)[0].length;
+            return line.trim().length > 0 ? Math.min(min, indent) : min;
+        }, Infinity);
+        const formattedCode = lines.map(line => line.slice(minIndent)).join('\n');
+        
+        return `<pre><code class="language-${lang || 'plaintext'}">${escapeHtml(formattedCode.trim())}</code></pre>`;
+    });
+
+    // Handle inline code
+    text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+    // Handle bold text
+    text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+    // Handle italic text
+    text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+    // Handle line breaks (preserve line breaks in code blocks)
+    text = text.replace(/\n(?!<\/code>)/g, '<br>');
+
+    return text;
+}
+
+function escapeHtml(unsafe) {
+    return unsafe
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
+}
+
+function addCopyButtonToCodeBlocks() {
+    document.querySelectorAll('pre code').forEach((block) => {
+        const button = document.createElement('button');
+        button.className = 'copy-code-btn';
+        button.textContent = 'Copy';
+        button.addEventListener('click', () => {
+            navigator.clipboard.writeText(block.textContent).then(() => {
+                button.textContent = 'Copied!';
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                }, 2000);
+            });
+        });
+        block.parentNode.insertBefore(button, block);
+    });
+}
+
+function applyMarkdownStyles(element) {
+    element.querySelectorAll('p').forEach(p => p.classList.add('mb-2'));
+    element.querySelectorAll('ul, ol').forEach(list => list.classList.add('ml-4', 'mb-2'));
+    element.querySelectorAll('li').forEach(li => li.classList.add('mb-1'));
+    element.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach(heading => heading.classList.add('font-bold', 'mb-2', 'mt-4'));
+    element.querySelectorAll('code:not(pre code)').forEach(code => code.classList.add('bg-gray-100', 'px-1', 'rounded'));
+    element.querySelectorAll('pre').forEach(pre => {
+        pre.classList.add('bg-gray-100', 'p-4', 'rounded', 'mb-2', 'relative', 'overflow-x-auto');
+        const code = pre.querySelector('code');
+        if (code) {
+            const language = code.className.match(/language-(\w+)/)?.[1] || 'plaintext';
+            code.classList.add(`language-${language}`);
+            
+            const copyButton = document.createElement('button');
+            copyButton.textContent = 'Copy';
+            copyButton.classList.add('copy-code-btn', 'absolute', 'top-2', 'right-2', 'bg-blue-500', 'text-white', 'px-2', 'py-1', 'rounded', 'text-sm', 'hover:bg-blue-600', 'focus:outline-none', 'focus:ring-2', 'focus:ring-blue-400');
+            copyButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                navigator.clipboard.writeText(code.textContent).then(() => {
+                    copyButton.textContent = 'Copied!';
+                    setTimeout(() => {
+                        copyButton.textContent = 'Copy';
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy text: ', err);
+                });
+            });
+            pre.appendChild(copyButton);
+        }
+    });
+    
+    // Apply Prism.js highlighting
+    if (typeof Prism !== 'undefined') {
+        Prism.highlightAllUnder(element);
+    }
 }

@@ -6,6 +6,11 @@
     <title>ChatcatGPT</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/themes/prism.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.24.1/components/prism-python.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -202,6 +207,79 @@
         #collapsed-identity.hidden {
             opacity: 0;
             pointer-events: none;
+        }
+
+        .copy-code-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            padding: 5px 10px;
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            z-index: 10;  
+        }
+        .copy-code-btn:hover {
+            background-color: #e0e0e0;
+        }
+        pre {
+            position: relative;
+            padding: 1em;
+            margin: 0.5em 0;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            background-color: #f4f4f4;
+            border-radius: 4px;
+        }
+
+        pre code {
+            display: block;
+            padding: 0;
+            overflow-x: auto;
+            white-space: pre;
+            word-wrap: normal;
+            line-height: 1.5;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .copy-code-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            padding: 5px 10px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+
+        .copy-code-btn:hover {
+            background-color: #d0d0d0;
+        }
+
+        .code-block {
+            white-space: pre-wrap;
+            word-break: break-all;
+            overflow-x: auto;
+            max-width: 100%;
+        }
+
+        .code-block code {
+            display: block;
+            padding: 1em;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.5;
         }
     </style>
 </head>
