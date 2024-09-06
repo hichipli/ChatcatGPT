@@ -5,12 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ChatcatGPT</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
+                        'sans': ['Poppins', 'sans-serif'],
+                        'poppins': ['Poppins', 'sans-serif'],
                         'roboto': ['Roboto', 'sans-serif'],
                     },
                     colors: {
@@ -203,12 +205,12 @@
         }
     </style>
 </head>
-<body class="min-h-screen font-roboto text-tech-dark flex items-center justify-center">
+<body class="min-h-screen font-sans text-tech-dark flex items-center justify-center">
     <div class="container mx-auto px-4 py-4 max-h-screen flex flex-col">
         <div class="glass-effect rounded-lg shadow-2xl overflow-hidden max-w-4xl mx-auto flex flex-col flex-grow">
             <!-- Header content -->
             <div class="bg-gradient-to-r from-tech-blue to-tech-indigo p-4 text-white relative">
-                <h1 class="text-4xl font-bold text-center mb-2" id="product-name">ChatcatGPT</h1>
+                <h1 class="text-4xl font-bold text-center mb-2 font-poppins" id="product-name">ChatcatGPT</h1>
                 <div class="absolute top-2 right-2 bg-white bg-opacity-20 rounded-full px-3 py-1 text-xs font-semibold">
                     <span class="mr-1">v</span>
                     <span class="text-white">0.2.2</span>
