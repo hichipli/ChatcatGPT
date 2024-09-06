@@ -297,10 +297,19 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function handleDownloadOption(event) {
         const downloadType = event.target.dataset.type;
-        if (downloadType === 'md') {
-            downloadMarkdown();
-        } else if (downloadType === 'txt') {
-            downloadPlainText();
+        switch (downloadType) {
+            case 'md':
+                downloadMarkdown();
+                break;
+            case 'txt':
+                downloadPlainText();
+                break;
+            case 'csv':
+                downloadCSV();
+                break;
+            case 'json':
+                downloadJSON();
+                break;
         }
         closeModal({ target: document.getElementById('download-modal') });
     }
@@ -330,18 +339,42 @@ document.addEventListener("DOMContentLoaded", function() {
         downloadAsFile(markdownContent, '.md');
     }    
 
-    function downloadAsFile(content, fileExtension) {
-        let mimeType = 'data:text/plain;charset=utf-8,';
-        if (fileExtension === '.md') {
-            mimeType = 'data:text/markdown;charset=utf-8,'; 
-        }
-        const dataUri = mimeType + encodeURIComponent(content);
+    function downloadCSV() {
+        const chatData = getChatData();
+        let csvContent = "\uFEFF"; 
+        csvContent += "Role,Timestamp,Content\n";
+        chatData.forEach(({ role, timestamp, content }) => {
+            csvContent += `"${role}","${timestamp}","${content.replace(/"/g, '""')}"\n`;
+        });
+        downloadAsFile(csvContent, '.csv', 'text/csv;charset=utf-8');
+    }
+
+    function downloadJSON() {
+        const chatData = getChatData();
+        const jsonContent = JSON.stringify(chatData, null, 2);
+        downloadAsFile(jsonContent, '.json', 'application/json');
+    }
+
+    function getChatData() {
+        const chatBox = document.getElementById('chat-box');
+        const messages = chatBox.querySelectorAll('.message');
+        return Array.from(messages).map(message => ({
+            role: message.querySelector('.message-name').textContent,
+            timestamp: message.querySelector('.message-time').textContent,
+            content: message.querySelector('.message-content').textContent
+        }));
+    }
+
+    function downloadAsFile(content, fileExtension, mimeType) {
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
-        link.href = dataUri;
+        link.href = url;
         link.download = `ChatcatGPT-${getFormattedDate()}-${new Date().toLocaleTimeString('en-US', { hour12: false }).replace(/:/g, '-')}${fileExtension}`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        URL.revokeObjectURL(url);
     }
 
     document.addEventListener('DOMContentLoaded', function() {
