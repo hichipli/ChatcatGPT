@@ -46,8 +46,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     document.getElementById('user-input').addEventListener('keydown', function(event) {
         if (event.key === 'Enter' && !event.shiftKey) {
-            event.preventDefault();  
-            handleUserMessage();  
+            if (!event.isComposing && !event.target.isComposing) {
+                event.preventDefault();  
+                handleUserMessage();  
+            }
         }
     });    
 

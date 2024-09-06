@@ -4,7 +4,7 @@ Welcome to the ChatcatGPT Project! This is a streamlined version of a personally
 
 ChatcatGPT is a lightweight web page, designed for quick and easy use across a variety of environments. It provides the opportunity to customize the identity of your own AI assistant, tailoring its features and capabilities to your specific needs.
 
-![Demo Image](Media/ChatcatGPT-image-0.2.2.png) 
+![Demo Image](Media/ChatcatGPT-image-0.2.3.png) 
 
 ## How to Use ChatcatGPT
 ChatcatGPT offers two convenient methods for users:
@@ -31,31 +31,13 @@ Choose the method that best suits your preferences and enjoy your ChatcatGPT exp
 
 ## Update Log
 
-### October 6, 2023
+### September 6, 2024 - v0.2.3
 
-1. Initial development completed at 5:00 AM.
-2. Addressed bugs related to JavaScript invocation.
-
-### October 8, 2023
-
-1. Basic bug fixes finished at 6:00 AM.
-2. Implemented all core features.
-3. Ongoing efforts to enrich user experience and add more functionalities.
-
-### October 10, 2023
-
-1. Launched website hosting for direct web-based access.
-2. Introduced the feature to download and save chat logs.
-3. The main interface now displays the current model being used.
-4. Revamped the settings window presentation.
-4. Addressed and resolved various minor issues.
-
-### October 25, 2023
-
-1. Began enhancing the typewriter effect for chat simulation.
-2. Optimized regular expressions to better identify and hyperlink URLs in chat.
-3. Troubleshot issues with certain URL terminations, particularly with punctuation marks.
-4. Ongoing refinement of user interactions for a more immersive chat experience.
+1.	Added text support, including paragraph separation, bold, and italic text.
+2.	Improved code block functionality with direct code copying feature.
+3.	Enhanced code block display with syntax highlighting.
+4.	Fixed the problem where the Enter key would interrupt Chinese input method.
+5.	Overall improvement in user experience, especially for Chinese-speaking users.
 
 ### September 5, 2024 - v0.2.1
 
@@ -65,6 +47,32 @@ Choose the method that best suits your preferences and enjoy your ChatcatGPT exp
 4. Added more default identity presets for quick AI assistant customization.
 5. Simplified the model selection process for user convenience.
 6. Released version v0.2.1 with these improvements.
+
+### October 25, 2023
+
+1. Began enhancing the typewriter effect for chat simulation.
+2. Optimized regular expressions to better identify and hyperlink URLs in chat.
+3. Troubleshot issues with certain URL terminations, particularly with punctuation marks.
+4. Ongoing refinement of user interactions for a more immersive chat experience.
+
+### October 10, 2023
+
+1. Launched website hosting for direct web-based access.
+2. Introduced the feature to download and save chat logs.
+3. The main interface now displays the current model being used.
+4. Revamped the settings window presentation.
+5. Addressed and resolved various minor issues.
+
+### October 8, 2023
+
+1. Basic bug fixes finished at 6:00 AM.
+2. Implemented all core features.
+3. Ongoing efforts to enrich user experience and add more functionalities.
+
+### October 6, 2023
+
+1. Initial development completed at 5:00 AM.
+2. Addressed bugs related to JavaScript invocation.
 
 We warmly invite the community to join us in this endeavor.
 
