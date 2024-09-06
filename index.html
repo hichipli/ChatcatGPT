@@ -74,7 +74,7 @@
         .model-dropdown {
             display: none;
             position: absolute;
-            right: 0;
+            left: 0;
             top: 100%;
             background: white;
             border: 1px solid #e2e8f0;
@@ -164,38 +164,95 @@
         .copy-btn i {
             color: #333;
         }
+
+        #chat-box {
+            resize: vertical;
+            overflow-y: auto;
+        }
+
+        #chat-box::after {
+            content: '⋮';
+            position: absolute;
+            bottom: 0;
+            right: 5px;
+            font-size: 20px;
+            color: #888;
+            pointer-events: none;
+        }
+
+        #identity-settings {
+            max-height: 1000px; /* Adjust as needed */
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out, margin-top 0.3s ease-out;
+        }
+
+        #identity-settings.collapsed {
+            max-height: 0;
+            opacity: 0;
+            margin-top: 0;
+        }
+
+        #collapsed-identity {
+            opacity: 1;
+            transition: opacity 0.3s ease-out;
+        }
+
+        #collapsed-identity.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
     </style>
 </head>
-<body class="min-h-screen font-roboto text-tech-dark">
-    <div class="container mx-auto px-4 py-4">
-        <div class="glass-effect rounded-lg shadow-2xl overflow-hidden max-w-4xl mx-auto">
+<body class="min-h-screen font-roboto text-tech-dark flex items-center justify-center">
+    <div class="container mx-auto px-4 py-4 max-h-screen flex flex-col">
+        <div class="glass-effect rounded-lg shadow-2xl overflow-hidden max-w-4xl mx-auto flex flex-col flex-grow">
+            <!-- Header content -->
             <div class="bg-gradient-to-r from-tech-blue to-tech-indigo p-4 text-white relative">
                 <h1 class="text-4xl font-bold text-center mb-4" id="product-name">ChatcatGPT</h1>
-                <div id="current-model-display" class="absolute top-16 right-4 bg-white bg-opacity-20 rounded-lg px-4 py-2 text-sm flex items-center">
-                    <span class="font-medium mr-2 text-lg">Current Model:</span>
-                    <span id="current-model-name" class="font-bold text-xl mr-2">GPT-4o</span>
-                    <button id="model-dropdown-btn" class="bg-white bg-opacity-30 hover:bg-opacity-50 rounded px-2 py-1 transition-colors duration-200">
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="model-dropdown">
+                <div class="flex justify-between items-center mb-2">
+                    <div id="current-model-display" class="bg-white bg-opacity-20 rounded-lg px-4 py-2 text-sm flex items-center relative">
+                        <span class="font-medium mr-2">Current Model:</span>
+                        <span id="current-model-name" class="font-bold mr-2">GPT-4o</span>
+                        <button id="model-dropdown-btn" class="bg-white bg-opacity-30 hover:bg-opacity-50 rounded px-2 py-1 transition-colors duration-200">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="model-dropdown absolute top-full left-0 mt-1 w-full">
+                            <!-- Dropdown content will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    <div id="collapsed-identity" class="bg-white bg-opacity-20 rounded-lg px-4 py-2 text-sm flex items-center">
+                        <span class="font-medium mr-2">Current Identity:</span>
+                        <span id="collapsed-identity-name" class="font-bold"></span>
+                        <button id="expand-identity-btn" class="bg-white bg-opacity-30 hover:bg-opacity-50 rounded px-2 py-1 transition-colors duration-200 ml-2">
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
                     </div>
                 </div>
-                <h2 class="text-xl font-semibold mt-6 mb-3 flex items-center">
-                    <i class="fas fa-user-cog mr-2"></i>Identity Settings
-                </h2>
-                <div id="current-identity-display" class="bg-white bg-opacity-10 rounded-lg p-4 transition-all duration-300 hover:bg-opacity-20 shadow-lg">
-                    <div class="flex justify-between items-center mb-3 border-b border-white border-opacity-20 pb-2">
-                        <span class="font-medium text-lg">Current Identity:</span>
-                        <span id="current-identity-name" class="font-bold text-lg">Daily Assistant</span>
+                <div id="identity-settings" class="mt-4 transition-all duration-300">
+                    <div class="flex justify-between items-center mb-2">
+                        <h2 class="text-xl font-semibold flex items-center">
+                            <i class="fas fa-user-cog mr-2"></i>Identity Settings
+                        </h2>
+                        <button id="toggle-identity-btn" class="bg-white bg-opacity-30 hover:bg-opacity-50 rounded px-2 py-1 transition-colors duration-200">
+                            <i class="fas fa-chevron-up"></i>
+                        </button>
                     </div>
-                    <div class="flex flex-col">
-                        <span class="font-medium mb-2">Prompt:</span>
-                        <span id="current-identity-prompt" class="text-sm italic bg-white bg-opacity-10 p-3 rounded-md leading-relaxed">You are a helpful assistant. You can help me by answering my questions. You can also ask me questions.</span>
+                    <div id="identity-content" class="bg-white bg-opacity-10 rounded-lg p-4 transition-all duration-300">
+                        <div class="flex justify-between items-center mb-3 border-b border-white border-opacity-20 pb-2">
+                            <span class="font-medium text-lg">Current Identity:</span>
+                            <span id="current-identity-name" class="font-bold text-lg">Daily Assistant</span>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="font-medium mb-2">Prompt:</span>
+                            <span id="current-identity-prompt" class="text-sm italic bg-white bg-opacity-10 p-3 rounded-md leading-relaxed">You are a helpful assistant. You can help me by answering my questions. You can also ask me questions.</span>
+                        </div>
                     </div>
                 </div>
             </div>
             
-            <div class="p-6 bg-gradient-to-br from-soft-white to-light-gray">
+            <!-- Main content area -->
+            <div class="p-6 bg-gradient-to-br from-soft-white to-light-gray flex-grow flex flex-col overflow-hidden">
+                <!-- Button area -->
                 <div class="flex flex-wrap gap-2 mb-4">
                     <button id="settings-btn" class="bg-gradient-to-r from-gray-500 to-gray-400 hover:from-gray-400 hover:to-gray-300 text-white font-semibold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105">
                         <i class="fas fa-cog"></i> <span class="lang" data-en="Settings" data-zh="设置">Settings</span>
@@ -211,10 +268,12 @@
                     </button> -->
                 </div>
 
-                <div id="chat-box" class="bg-white bg-opacity-50 rounded-lg p-4 h-96 overflow-y-auto mb-4 border border-gray-300 shadow-inner"></div>
+                <!-- Chat box -->
+                <div id="chat-box" class="bg-white bg-opacity-50 rounded-lg p-4 flex-grow overflow-y-auto mb-4 border border-gray-300 shadow-inner resize-y min-h-[14rem]"></div>
 
-                <div class="flex">
-                    <textarea id="user-input" class="flex-grow mr-2 p-2 bg-white bg-opacity-70 text-tech-dark border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-tech-blue" placeholder="Type your message here...&#10;Press (Shift+Enter) to insert a line break in the text."></textarea>
+                <!-- Input area -->
+                <div class="flex mt-auto">
+                    <textarea id="user-input" class="flex-grow mr-2 p-2 bg-white bg-opacity-70 text-tech-dark border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-tech-blue resize-y" placeholder="Type your message here...&#10;Press (Shift+Enter) to insert a line break in the text."></textarea>
                     <button id="send-btn" class="bg-gradient-to-r from-tech-blue to-tech-indigo hover:from-blue-500 hover:to-indigo-500 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 flex items-center">
                         <span class="btn-text mr-2 lang" data-en="Send" data-zh="发送">Send</span>
                         <i class="fas fa-paper-plane"></i>

@@ -64,6 +64,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const identityPrompt = identitySelection.value;
         document.getElementById('current-identity-name').textContent = identityName;
         document.getElementById('current-identity-prompt').textContent = `"${identityPrompt}"`;
+        document.getElementById('collapsed-identity-name').textContent = identityName;
     }
 
     function getFormattedDate() {
@@ -361,6 +362,41 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 
     updateCurrentModelDisplay();
+
+    const toggleIdentityBtn = document.getElementById('toggle-identity-btn');
+    const expandIdentityBtn = document.getElementById('expand-identity-btn');
+    const identitySettings = document.getElementById('identity-settings');
+    const collapsedIdentity = document.getElementById('collapsed-identity');
+    const collapsedIdentityName = document.getElementById('collapsed-identity-name');
+
+    // Set initial state (collapsed)
+    identitySettings.classList.add('collapsed');
+    collapsedIdentity.classList.remove('hidden');
+    updateCollapsedIdentityName();
+
+    toggleIdentityBtn.addEventListener('click', toggleIdentitySettings);
+    expandIdentityBtn.addEventListener('click', toggleIdentitySettings);
+
+    function toggleIdentitySettings() {
+        identitySettings.classList.toggle('collapsed');
+        collapsedIdentity.classList.toggle('hidden');
+        updateCollapsedIdentityName();
+
+        // Update icon
+        const icon = identitySettings.classList.contains('collapsed') 
+            ? expandIdentityBtn.querySelector('i') 
+            : toggleIdentityBtn.querySelector('i');
+        icon.classList.toggle('fa-chevron-up');
+        icon.classList.toggle('fa-chevron-down');
+    }
+
+    function updateCollapsedIdentityName() {
+        const currentIdentityName = document.getElementById('current-identity-name').textContent;
+        collapsedIdentityName.textContent = currentIdentityName;
+    }
+
+    // Update collapsed identity name when identity changes
+    document.getElementById('identity-selection').addEventListener('change', updateCollapsedIdentityName);
 });
 
 function copyMessage(button) {
