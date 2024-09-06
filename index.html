@@ -100,6 +100,70 @@
         .model-dropdown button:hover {
             background-color: #f7fafc;
         }
+        
+        .message {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 1rem;
+            position: relative;
+            max-width: 80%;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .user-message {
+            background-color: #E3F2FD;
+            margin-left: auto;
+            border-bottom-right-radius: 0;
+        }
+        
+        .gpt-message {
+            background-color: #F1F8E9;
+            margin-right: auto;
+            border-bottom-left-radius: 0;
+        }
+        
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .message-name {
+            font-weight: bold;
+        }
+        
+        .message-time {
+            color: #666;
+        }
+        
+        .message-content {
+            word-wrap: break-word;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            bottom: 0.5rem;
+            right: 0.5rem;
+            background-color: rgba(255, 255, 255, 0.7);
+            border: none;
+            border-radius: 50%;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .copy-btn:hover {
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .copy-btn i {
+            color: #333;
+        }
     </style>
 </head>
 <body class="min-h-screen font-roboto text-tech-dark">

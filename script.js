@@ -144,7 +144,24 @@ document.addEventListener("DOMContentLoaded", function() {
         const chatBox = document.getElementById('chat-box');
         const urlRegex = /(https?:\/\/[^\s<]+[^<.,:;"'\]\s])/g;
         content = content.replace(urlRegex, '<a href="$1" target="_blank">$1</a>');
-        chatBox.innerHTML += `<div class="message"><strong>${sender}:</strong> ${content}</div>`;
+        
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${sender === 'User' ? 'user-message' : 'gpt-message'}`;
+        
+        const currentTime = new Date().toLocaleTimeString('en-US', { hour12: false });
+        
+        messageDiv.innerHTML = `
+            <div class="message-header">
+                <span class="message-name">${sender}</span>
+                <span class="message-time">${currentTime}</span>
+            </div>
+            <div class="message-content">${content}</div>
+            <button class="copy-btn" onclick="copyMessage(this)">
+                <i class="fas fa-copy"></i>
+            </button>
+        `;
+        
+        chatBox.appendChild(messageDiv);
         chatBox.scrollTop = chatBox.scrollHeight;
     }
     
@@ -159,19 +176,30 @@ document.addEventListener("DOMContentLoaded", function() {
         const chatBox = document.getElementById('chat-box');
             
         if (index === 0) {
-            const newMessageDiv = document.createElement('div');
-            newMessageDiv.className = 'temp-message';
-            newMessageDiv.innerHTML = `<strong>${sender}:</strong> `;
-            chatBox.appendChild(newMessageDiv);
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message gpt-message temp-message`;
+            const currentTime = new Date().toLocaleTimeString('en-US', { hour12: false });
+            messageDiv.innerHTML = `
+                <div class="message-header">
+                    <span class="message-name">${sender}</span>
+                    <span class="message-time">${currentTime}</span>
+                </div>
+                <div class="message-content"></div>
+                <button class="copy-btn" onclick="copyMessage(this)">
+                    <i class="fas fa-copy"></i>
+                </button>
+            `;
+            chatBox.appendChild(messageDiv);
         }
             
-        const tempMessage = document.querySelector('.temp-message');
+        const tempMessage = document.querySelector('.temp-message .message-content');
         if (index < message.length) {
             tempMessage.innerHTML += message.charAt(index);
             setTimeout(() => typeWriterEffect(sender, message, ++index), 5);
         } else {
-            tempMessage.classList.remove('temp-message');
-    
+            const messageDiv = tempMessage.closest('.message');
+            messageDiv.classList.remove('temp-message');
+
             const urlRegex = /(https?:\/\/[^\s<]+[^<.,:;"'\]\s])/g;
             tempMessage.innerHTML = tempMessage.innerHTML.replace(urlRegex, '<a href="$1" target="_blank">$1</a>');
         }
@@ -198,7 +226,7 @@ document.addEventListener("DOMContentLoaded", function() {
         dropdown.classList.toggle('show');
     });
 
-    // 选择模型
+    // 选模型
     dropdown.addEventListener('click', function(e) {
         if (e.target.tagName === 'BUTTON') {
             const selectedModel = e.target.dataset.model;
@@ -338,3 +366,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
     updateCurrentModelDisplay();
 });
+
+function copyMessage(button) {
+    const messageContent = button.parentElement.querySelector('.message-content').innerText;
+    navigator.clipboard.writeText(messageContent).then(() => {
+        alert('Copied to clipboard!');
+    });
+}
