@@ -57,6 +57,15 @@ Choose the method that best suits your preferences and enjoy your ChatcatGPT exp
 3. Troubleshot issues with certain URL terminations, particularly with punctuation marks.
 4. Ongoing refinement of user interactions for a more immersive chat experience.
 
+### September 5, 2024
+
+1. Updated the UI interface for a more streamlined experience.
+2. Removed deprecated button schemes to simplify user interactions.
+3. Streamlined the settings interface for easier navigation.
+4. Added more default identity presets for quick AI assistant customization.
+5. Simplified the model selection process for user convenience.
+6. Released version v0.2.1 with these improvements.
+
 We warmly invite the community to join us in this endeavor.
 
 Experience the power of AI with ChatcatGPT today!
