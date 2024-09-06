@@ -74,32 +74,42 @@
     </style>
 </head>
 <body class="min-h-screen font-roboto text-tech-dark">
-    <div class="container mx-auto px-4 py-8">
+    <div class="container mx-auto px-4 py-4">
         <div class="glass-effect rounded-lg shadow-2xl overflow-hidden max-w-4xl mx-auto">
-            <div class="bg-gradient-to-r from-tech-blue to-tech-indigo p-6 text-white">
+            <div class="bg-gradient-to-r from-tech-blue to-tech-indigo p-4 text-white relative">
                 <h1 class="text-3xl font-bold" id="product-name">ChatcatGPT</h1>
-                <div id="current-model-display" class="mt-2">
-                    <strong>Current Model:</strong> <span id="current-model-name">GPT-4o</span>
+                <div id="current-model-display" class="absolute top-2 right-4 bg-white bg-opacity-20 rounded-full px-3 py-1 text-sm">
+                    <span class="font-medium">Current Model:</span>
+                    <span id="current-model-name" class="font-bold">GPT-4o</span>
                 </div>
-                <div id="current-identity-display" class="mt-2">
-                    <strong>Current Identity:</strong> <span id="current-identity-name">Daily Assistant</span><br>
-                    <strong>Prompt:</strong> <span id="current-identity-prompt" class="text-sm italic">You are a helpful assistant. You can help me by answering my questions. You can also ask me questions.</span>
+                <h2 class="text-xl font-semibold mt-6 mb-3 flex items-center justify-center">
+                    <i class="fas fa-user-cog mr-2"></i>Identity Settings
+                </h2>
+                <div id="current-identity-display" class="bg-white bg-opacity-10 rounded-lg p-4 transition-all duration-300 hover:bg-opacity-20 shadow-lg">
+                    <div class="flex justify-between items-center mb-3 border-b border-white border-opacity-20 pb-2">
+                        <span class="font-medium text-lg">Current Identity:</span>
+                        <span id="current-identity-name" class="font-bold text-lg">Daily Assistant</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-medium mb-2">Prompt:</span>
+                        <span id="current-identity-prompt" class="text-sm italic bg-white bg-opacity-10 p-3 rounded-md leading-relaxed">You are a helpful assistant. You can help me by answering my questions. You can also ask me questions.</span>
+                    </div>
                 </div>
             </div>
             
             <div class="p-6 bg-gradient-to-br from-soft-white to-light-gray">
                 <div class="flex flex-wrap gap-2 mb-4">
                     <button id="settings-btn" class="bg-gradient-to-r from-gray-500 to-gray-400 hover:from-gray-400 hover:to-gray-300 text-white font-semibold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105">
-                        <i class="fas fa-cog"></i> Settings
+                        <i class="fas fa-cog"></i> <span class="lang" data-en="Settings" data-zh="设置">Settings</span>
                     </button>
                     <button id="download-btn" class="bg-gradient-to-r from-green-500 to-green-400 hover:from-green-400 hover:to-green-300 text-white font-semibold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105">
-                        <i class="fas fa-download"></i> Download
+                        <i class="fas fa-download"></i> <span class="lang" data-en="Download" data-zh="下载">Download</span>
                     </button>
                     <button id="clean-btn" class="bg-gradient-to-r from-red-500 to-red-400 hover:from-red-400 hover:to-red-300 text-white font-semibold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105">
-                        <i class="fas fa-trash-alt"></i> Clean
+                        <i class="fas fa-trash-alt"></i> <span class="lang" data-en="Clean" data-zh="清空">Clean</span>
                     </button>
                     <button id="language-toggle-btn" class="bg-gradient-to-r from-yellow-500 to-yellow-400 hover:from-yellow-400 hover:to-yellow-300 text-white font-semibold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105">
-                        <i class="fas fa-language"></i> 中文/English
+                        <i class="fas fa-language"></i> <span class="lang" data-en="中文/English" data-zh="English/中文">中文/English</span>
                     </button>
                 </div>
 
@@ -108,7 +118,7 @@
                 <div class="flex">
                     <textarea id="user-input" class="flex-grow mr-2 p-2 bg-white bg-opacity-70 text-tech-dark border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-tech-blue" placeholder="Type your message here...&#10;Press (Shift+Enter) to insert a line break in the text."></textarea>
                     <button id="send-btn" class="bg-gradient-to-r from-tech-blue to-tech-indigo hover:from-blue-500 hover:to-indigo-500 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 flex items-center">
-                        <span class="btn-text mr-2">Send</span>
+                        <span class="btn-text mr-2 lang" data-en="Send" data-zh="发送">Send</span>
                         <i class="fas fa-paper-plane"></i>
                         <span class="loader hidden ml-2"></span>
                     </button>

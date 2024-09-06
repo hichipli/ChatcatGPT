@@ -266,4 +266,35 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('chat-box').innerHTML = '';
         chatHistory = []; // Clear chat history
     }
+
+    function getModelAlias(modelName) {
+        const modelAliases = {
+            'gpt-4o': 'GPT-4o',
+            'gpt-4o-mini': 'GPT-4o-mini',
+            'gpt-4-turbo': 'GPT-4 Turbo',
+            'gpt-4': 'GPT-4',
+            'gpt-3.5-turbo': 'GPT-3.5 Turbo'
+        };
+        return modelAliases[modelName] || modelName;
+    }
+    function updateCurrentModelDisplay() {
+        const currentModel = localStorage.getItem('selectedModel') || 'gpt-4o';
+        const modelAlias = getModelAlias(currentModel);
+        document.getElementById('current-model-name').textContent = modelAlias;
+    }
+
+    document.getElementById('save-settings-btn').addEventListener('click', function() {
+        const selectedModel = document.getElementById('model-selection').value;
+        localStorage.setItem('selectedModel', selectedModel);
+        updateCurrentModelDisplay();
+
+    });
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        updateCurrentModelDisplay();
+        
+
+    });
 });
