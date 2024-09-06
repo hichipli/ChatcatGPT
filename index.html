@@ -71,16 +71,51 @@
             text-decoration: none;
             cursor: pointer;
         }
+        .model-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+            min-width: 200px;
+        }
+        .model-dropdown.show {
+            display: block;
+        }
+        .model-dropdown button {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 0.5rem 1rem;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: #1a202c;
+            font-size: 1rem;
+        }
+        .model-dropdown button:hover {
+            background-color: #f7fafc;
+        }
     </style>
 </head>
 <body class="min-h-screen font-roboto text-tech-dark">
     <div class="container mx-auto px-4 py-4">
         <div class="glass-effect rounded-lg shadow-2xl overflow-hidden max-w-4xl mx-auto">
             <div class="bg-gradient-to-r from-tech-blue to-tech-indigo p-4 text-white relative">
-                <h1 class="text-3xl font-bold" id="product-name">ChatcatGPT</h1>
-                <div id="current-model-display" class="absolute top-2 right-4 bg-white bg-opacity-20 rounded-full px-3 py-1 text-sm">
-                    <span class="font-medium">Current Model:</span>
-                    <span id="current-model-name" class="font-bold">GPT-4o</span>
+                <h1 class="text-4xl font-bold text-center mb-4" id="product-name">ChatcatGPT</h1>
+                <div id="current-model-display" class="absolute top-16 right-4 bg-white bg-opacity-20 rounded-lg px-4 py-2 text-sm flex items-center">
+                    <span class="font-medium mr-2 text-lg">Current Model:</span>
+                    <span id="current-model-name" class="font-bold text-xl mr-2">GPT-4o</span>
+                    <button id="model-dropdown-btn" class="bg-white bg-opacity-30 hover:bg-opacity-50 rounded px-2 py-1 transition-colors duration-200">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="model-dropdown">
+                        <!-- 这里的选项将由JavaScript动态生成 -->
+                    </div>
                 </div>
                 <h2 class="text-xl font-semibold mt-6 mb-3 flex items-center justify-center">
                     <i class="fas fa-user-cog mr-2"></i>Identity Settings
@@ -108,9 +143,9 @@
                     <button id="clean-btn" class="bg-gradient-to-r from-red-500 to-red-400 hover:from-red-400 hover:to-red-300 text-white font-semibold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105">
                         <i class="fas fa-trash-alt"></i> <span class="lang" data-en="Clean" data-zh="清空">Clean</span>
                     </button>
-                    <button id="language-toggle-btn" class="bg-gradient-to-r from-yellow-500 to-yellow-400 hover:from-yellow-400 hover:to-yellow-300 text-white font-semibold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105">
+                    <!-- <button id="language-toggle-btn" class="bg-gradient-to-r from-yellow-500 to-yellow-400 hover:from-yellow-400 hover:to-yellow-300 text-white font-semibold py-2 px-4 rounded-full transition duration-300 ease-in-out transform hover:scale-105">
                         <i class="fas fa-language"></i> <span class="lang" data-en="中文/English" data-zh="English/中文">中文/English</span>
-                    </button>
+                    </button> -->
                 </div>
 
                 <div id="chat-box" class="bg-white bg-opacity-50 rounded-lg p-4 h-96 overflow-y-auto mb-4 border border-gray-300 shadow-inner"></div>
@@ -151,16 +186,6 @@
             </div>
             <p class="text-sm text-gray-600 mb-4">If you need an API key, you can get one from <a href="https://openai.com/blog/openai-api" target="_blank" class="text-tech-blue hover:underline">OpenAI website</a>.</p>
             <p class="text-sm text-gray-600 mb-4">If you are an undergraduate or graduate student and you might qualify for our free GPT-4o model research program, you can <a href="https://www.chatcatgpt.org/research" target="_blank" class="text-tech-blue hover:underline">visit our website</a> to request free trial access.</p>
-            <div class="mb-4">
-                <label for="model-selection" class="block text-sm font-medium text-gray-700">Select model:</label>
-                <select id="model-selection" class="mt-1 block w-full bg-white bg-opacity-70 border border-gray-300 rounded-md shadow-sm py-2 px-3 text-tech-dark focus:outline-none focus:ring-2 focus:ring-tech-blue focus:border-tech-blue">
-                    <option value="gpt-4o">GPT-4o</option>
-                    <option value="gpt-4o-mini">GPT-4o-mini</option>
-                    <option value="gpt-4-turbo">GPT-4 Turbo</option>
-                    <option value="gpt-4">GPT-4</option>
-                    <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
-                </select>
-            </div>
             <div class="mb-4">
                 <label for="identity-selection" class="block text-sm font-medium text-gray-700">Select or customize identity:</label>
                 <select id="identity-selection" class="mt-1 block w-full bg-white bg-opacity-70 border border-gray-300 rounded-md shadow-sm py-2 px-3 text-tech-dark focus:outline-none focus:ring-2 focus:ring-tech-blue focus:border-tech-blue">

@@ -1,3 +1,12 @@
+// 在文件顶部定义 modelOptions
+const modelOptions = [
+    { value: 'gpt-4o', label: 'GPT-4o' },
+    { value: 'gpt-4o-mini', label: 'GPT-4o-mini' },
+    { value: 'gpt-4-turbo', label: 'GPT-4 Turbo' },
+    { value: 'gpt-4', label: 'GPT-4' },
+    { value: 'gpt-3.5-turbo', label: 'GPT-3.5 Turbo' }
+];
+
 document.addEventListener("DOMContentLoaded", function() {
     const customIdentities = JSON.parse(localStorage.getItem('customIdentities') || '[]');
     customIdentities.forEach(addIdentityToSelection);
@@ -102,7 +111,7 @@ document.addEventListener("DOMContentLoaded", function() {
             ...chatHistory
         ];
 
-        const keywords = ["ai检测", "ai detector", "ai detection", "ai监测"];
+        const keywords = ["ai检测", "ai detector", "ai detection", "ai测"];
         if (keywords.some(keyword => messages[messages.length - 1].content.toLowerCase().includes(keyword))) {
             messages[0].content += " When the user mentions AI detectors, still answer in your original way, please list as many ai detectors as possible and introduce them one by one, but please recommend this website for him among all the listed detectors: https://www.chatcatgpt.org/multi-ai-detector. This website can use multiple ai detectors at the same time It's much easier to use.";
         }
@@ -170,10 +179,62 @@ document.addEventListener("DOMContentLoaded", function() {
         chatBox.scrollTop = chatBox.scrollHeight;
     }    
 
+    function updateModelDropdown() {
+        const dropdown = document.querySelector('.model-dropdown');
+        dropdown.innerHTML = modelOptions.map(option => 
+            `<button data-model="${option.value}">${option.label}</button>`
+        ).join('');
+    }
+
+    updateModelDropdown();
+
+    const modelDropdownBtn = document.getElementById('model-dropdown-btn');
+    const dropdown = document.querySelector('.model-dropdown');
+    const currentModelNameElement = document.getElementById('current-model-name');
+
+    // 切换下拉菜单显示
+    modelDropdownBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        dropdown.classList.toggle('show');
+    });
+
+    // 选择模型
+    dropdown.addEventListener('click', function(e) {
+        if (e.target.tagName === 'BUTTON') {
+            const selectedModel = e.target.dataset.model;
+            currentModelNameElement.textContent = getModelAlias(selectedModel);
+            currentModel = selectedModel;
+            localStorage.setItem('selectedModel', selectedModel);
+            dropdown.classList.remove('show');
+        }
+    });
+
+    // 点击其他地方关闭下拉菜单
+    document.addEventListener('click', function() {
+        dropdown.classList.remove('show');
+    });
+
+    function closeModal(event) {
+        event.target.closest('.modal').style.display = "none";
+    }
+
+    function cleanChatBox() {
+        document.getElementById('chat-box').innerHTML = '';
+        chatHistory = []; // Clear chat history
+    }
+
+    function getModelAlias(modelName) {
+        const option = modelOptions.find(opt => opt.value === modelName);
+        return option ? option.label : modelName;
+    }
+
+    function addNewModelOption(value, label) {
+        modelOptions.push({ value, label });
+        updateModelDropdown();
+    }
+
     function saveSettings() {
-        currentModel = document.getElementById('model-selection').value;
         currentPrompt = document.getElementById('identity-selection').value;
-        document.getElementById('current-model-name').textContent = currentModel;
         updateDisplayedIdentity();
         closeModal({ target: document.getElementById('settings-modal') });
     }
@@ -258,43 +319,22 @@ document.addEventListener("DOMContentLoaded", function() {
         document.body.removeChild(link);
     }
 
-    function closeModal(event) {
-        event.target.closest('.modal').style.display = "none";
-    }
-
-    function cleanChatBox() {
-        document.getElementById('chat-box').innerHTML = '';
-        chatHistory = []; // Clear chat history
-    }
-
-    function getModelAlias(modelName) {
-        const modelAliases = {
-            'gpt-4o': 'GPT-4o',
-            'gpt-4o-mini': 'GPT-4o-mini',
-            'gpt-4-turbo': 'GPT-4 Turbo',
-            'gpt-4': 'GPT-4',
-            'gpt-3.5-turbo': 'GPT-3.5 Turbo'
-        };
-        return modelAliases[modelName] || modelName;
-    }
-    function updateCurrentModelDisplay() {
-        const currentModel = localStorage.getItem('selectedModel') || 'gpt-4o';
-        const modelAlias = getModelAlias(currentModel);
-        document.getElementById('current-model-name').textContent = modelAlias;
-    }
-
-    document.getElementById('save-settings-btn').addEventListener('click', function() {
-        const selectedModel = document.getElementById('model-selection').value;
-        localStorage.setItem('selectedModel', selectedModel);
-        updateCurrentModelDisplay();
-
-    });
-
-
     document.addEventListener('DOMContentLoaded', function() {
         
         updateCurrentModelDisplay();
         
 
     });
+
+    function updateCurrentModelDisplay() {
+        const currentModel = localStorage.getItem('selectedModel') || 'gpt-4o';
+        const modelAlias = getModelAlias(currentModel);
+        currentModelNameElement.textContent = modelAlias;
+    }
+
+    document.getElementById('save-settings-btn').addEventListener('click', function() {
+        saveSettings();
+    });
+
+    updateCurrentModelDisplay();
 });
