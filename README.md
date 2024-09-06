@@ -42,7 +42,7 @@ Choose the method that best suits your preferences and enjoy your ChatcatGPT exp
 2. Implemented all core features.
 3. Ongoing efforts to enrich user experience and add more functionalities.
 
-### October 10, 2023:
+### October 10, 2023
 
 1. Launched website hosting for direct web-based access.
 2. Introduced the feature to download and save chat logs.
@@ -50,14 +50,14 @@ Choose the method that best suits your preferences and enjoy your ChatcatGPT exp
 4. Revamped the settings window presentation.
 4. Addressed and resolved various minor issues.
 
-### October 25, 2023:
+### October 25, 2023
 
 1. Began enhancing the typewriter effect for chat simulation.
 2. Optimized regular expressions to better identify and hyperlink URLs in chat.
 3. Troubleshot issues with certain URL terminations, particularly with punctuation marks.
 4. Ongoing refinement of user interactions for a more immersive chat experience.
 
-### September 5, 2024
+### September 5, 2024 - v0.2.1
 
 1. Updated the UI interface for a more streamlined experience.
 2. Removed deprecated button schemes to simplify user interactions.
