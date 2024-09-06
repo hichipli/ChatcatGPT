@@ -1,4 +1,3 @@
-// 在文件顶部定义 modelOptions
 const modelOptions = [
     { value: 'gpt-4o', label: 'GPT-4o' },
     { value: 'gpt-4o-mini', label: 'GPT-4o-mini' },
@@ -220,13 +219,11 @@ document.addEventListener("DOMContentLoaded", function() {
     const dropdown = document.querySelector('.model-dropdown');
     const currentModelNameElement = document.getElementById('current-model-name');
 
-    // 切换下拉菜单显示
     modelDropdownBtn.addEventListener('click', function(e) {
         e.stopPropagation();
         dropdown.classList.toggle('show');
     });
 
-    // 选模型
     dropdown.addEventListener('click', function(e) {
         if (e.target.tagName === 'BUTTON') {
             const selectedModel = e.target.dataset.model;
@@ -237,7 +234,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // 点击其他地方关闭下拉菜单
     document.addEventListener('click', function() {
         dropdown.classList.remove('show');
     });
